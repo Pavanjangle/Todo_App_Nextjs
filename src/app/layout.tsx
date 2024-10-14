@@ -35,11 +35,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {/* Wrap MantineProvider around MSWProvider */}
-        <MantineProvider
-          
-        >
+        <MantineProvider>
           {/* Enable client-side mocking */}
-          
           <MSWProvider>{children}</MSWProvider>
         </MantineProvider>
       </body>

@@ -21,7 +21,6 @@
     // Open modal for adding new task
     const handleAdd = () => {
       navigate("/tasks/new");
-
     };
 
     // Open modal for editing existing task
@@ -50,8 +49,8 @@
     }, []);
 
     return (
-      <div className="flex justify-center items-center min-h-screen bg-white-300">
-        <div className="bg-gray-200 shadow-lg rounded-lg p-8 max-w-xl w-full">
+      <div className="flex justify-center items-center min-h-screen bg-white">
+        <div className="bg-gray-400 shadow-lg rounded-lg p-8 max-w-xl w-full">
           <h1 className="text-2xl font-bold mb-5 text-center">TODO App</h1>
 
           {/* Search */}
@@ -66,7 +65,7 @@
           {/* Add Todo Button */}
           <button
             onClick={handleAdd}
-            className="bg-blue-500 text-white px-5 py-2 rounded mb-4 w-full"
+            className="bg-blue-600 text-white px-5 py-2 rounded mb-4 w-full"
           >
             Add New TODO
           </button>
@@ -83,7 +82,7 @@
                   <div>
                     <button
                       onClick={() => handleEdit(todo)}
-                      className="bg-green-500 text-white px-3 py-2 rounded mr-2"
+                      className="bg-green-600 text-white px-3 py-2 rounded mr-2"
                     >
                       Edit
                     </button>
@@ -97,8 +96,6 @@
                 </li>
               ))}
           </ul>
-
-
         </div>
       </div>
     );

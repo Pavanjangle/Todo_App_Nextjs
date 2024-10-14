@@ -24,7 +24,6 @@ export default async function Home() {
   return (
     <Container>
       <ClientOnlyBrowserRouter>
-      
         <Routes>
           <Route path="/" element={<Todo />}>
           </Route>
@@ -32,9 +31,8 @@ export default async function Home() {
 
           <Route path="/tasks/:id/edit" element={<EditTask />} />
         </Routes>
-      
       </ClientOnlyBrowserRouter>
     </Container>
-    
+
   );
 }
