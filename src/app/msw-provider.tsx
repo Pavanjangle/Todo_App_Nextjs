@@ -8,7 +8,9 @@ const mockingEnabledPromise =
     ? import("../mocks/browser").then(async ({ worker }) => {
         await worker.start({
           onUnhandledRequest(request, print) {
-            if (request.url.includes("_next")) {
+            if (request.url.includes("_next")) 
+              
+              {
               return;
             }
             print.warning();
