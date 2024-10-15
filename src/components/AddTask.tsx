@@ -1,64 +1,50 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
+import React from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { validationSchema } from "@/Utlis/Validation";
-import { saveTodo } from "@/Utlis/api";
-import { useNavigate, } from "react-router-dom";
+import { useSaveTodo } from "@/Utlis/api";
+import { useNavigate } from "react-router-dom";
 
 const AddTask = () => {
-    const navigate = useNavigate();
-    const saveTask = async (data: { taskName: string }) => {
+  const navigate = useNavigate();
+  const saveTaskMutation = useSaveTodo();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitted },
+  } = useForm<{ taskName: string }>({
+    resolver: yupResolver(validationSchema),
+  });
 
-        const response = await saveTodo(data.taskName)
-        if (response) {
-            navigate(-1)
-        }
-    }
-    // Initialize useForm with Yup validation
-    const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitted } } = useForm<{ taskName: string }>({
-        resolver: yupResolver(validationSchema),
+  const saveTask = (data: { taskName: string }) => {
+    saveTaskMutation.mutate(data.taskName, {
+      onSuccess: () => navigate(-1),
     });
-    return (
-        <form 
-        onSubmit={handleSubmit(saveTask)} 
-        className="max-w-md mx-auto mt-20 p-6 bg-white rounded-lg shadow-lg bg-gray-400"
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit(saveTask)}
+      className="max-w-md mx-auto mt-20 p-6 rounded-lg shadow-lg bg-gray-3ss00"
+    >
+      <input
+        type="text"
+        placeholder="Task name"
+        className="border p-2 mb-3 w-full"
+        {...register("taskName")}
+      />
+      {errors.taskName && isSubmitted && (
+        <p className="text-red-400">{errors.taskName.message}</p>
+      )}
+      <button
+        type="submit"
+        className="bg-blue-600 text-white px-4 py-2 rounded w-full"
       >
-          <input
-            type="text"
-            placeholder="Task name"
-            className="border p-2 mb-3 w-full"
-            {...register('taskName')}
-          />
-          {errors.taskName && isSubmitted && <p className="text-red-500">{errors.taskName.message}</p>}
-          
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded w-full"
-          >
-            {"Add Task"}
-          </button>
-      </form>
-      
-    )
-}
+        {"Add Task"}
+      </button>
+    </form>
+  );
+};
 
 export default AddTask;
-
-
-{/* <form onSubmit={handleSubmit(saveTask)}>
-            <input
-                type="text"
-                placeholder="Task name"
-                className="border p-2 mb-3 w-full mt-20"
-                {...register('taskName')}
-            />
-            {errors.taskName && isSubmitted && <p className="text-red-500">{errors.taskName.message}</p>}
-            <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded w-full"
-            >
-                {"Add Task"}
-            </button>
-        </form> */}

@@ -1,58 +1,62 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { validationSchema } from "@/Utlis/Validation";
-import { editTodo, fetchTodoById, saveTodo } from "@/Utlis/api";
-import { useParams } from "react-router-dom";
-import { useNavigate, } from "react-router-dom";
+import { useEditTodo, useTodoById } from "@/Utlis/api";
+import { useNavigate, useParams } from "react-router-dom";
 
 const EditTask = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { data: todo, isLoading } = useTodoById(id!);
+  const editTaskMutation = useEditTodo(id!);
 
-    // Initialize useForm with Yup validation
-    const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitted } } = useForm<{ taskName: string }>({
-        resolver: yupResolver(validationSchema),
-    });
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors, isSubmitted },
+  } = useForm<{ taskName: string }>({
+    resolver: yupResolver(validationSchema),
+  });
 
-    const navigate = useNavigate();
-    let { id } = useParams();
-    useEffect(() => {
-        fetchTodoById(id).then(data => {
-            setValue("taskName", data.taskName)
-        });
-
-    }, [setValue]);
-    const updateTask = async (data: { taskName: string }) => {
-
-        const response = await editTodo(data.taskName, id)
-        if (response) {
-            navigate(-1)
-        }
+  useEffect(() => {
+    if (todo) {
+      setValue("taskName", todo.taskName);
     }
-    return (
-        <form 
-        onSubmit={handleSubmit(updateTask)} 
-        className="max-w-lg mx-auto mt-20 p-8 bg-white rounded-lg shadow-md bg-gray-400"
+  }, [todo, setValue]);
+
+  const editTask = (data: { taskName: string }) => {
+    editTaskMutation.mutate(data.taskName, {
+      onSuccess: () => navigate(-1),
+    });
+  };
+
+  if (isLoading) return <p>Loading...</p>;
+
+  return (
+    <form
+      onSubmit={handleSubmit(editTask)}
+      className="max-w-md mx-auto mt-20 p-6 rounded-lg shadow-lg bg-gray-300"
+    >
+      <input
+        type="text"
+        placeholder="Task name"
+        className="border p-2 mb-3 w-full"
+        {...register("taskName")}
+      />
+      {errors.taskName && isSubmitted && (
+        <p className="text-red-400">{errors.taskName.message}</p>
+      )}
+      <button
+        type="submit"
+        className="bg-blue-600 text-white px-4 py-2 rounded w-full"
       >
-          <input
-            type="text"
-            placeholder="Task name"
-            className="border p-2 mb-4 w-full"
-            {...register('taskName')}
-          />
-          {errors.taskName && isSubmitted && <p className="text-red-500">{errors.taskName.message}</p>}
-          
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded w-full"
-          >
-            {"Update Task"}
-          </button>
-      </form>
-      
-    )
-}
+        {"Edit Task"}
+      </button>
+    </form>
+  );
+};
 
 export default EditTask;
-

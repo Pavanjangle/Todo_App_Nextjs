@@ -6,7 +6,6 @@ let todos: { id: number; taskName: string }[] = [];
 
 // Helper function to generate unique IDs
 const generateId = () => (todos.length ? Math.max(...todos.map((todo) => todo.id)) + 1 : 1);
-
 export const handlers = [
   // Intercept "GET /api/todos" requests to get the list of todos
   http.get("/api/todos", () => {
@@ -14,13 +13,12 @@ export const handlers = [
   }),
 
   http.get("/api/todos/:id", (req) => {
-  
     const { id } = req.params;
-    console.log(id);
+
+  
 
     // Filter out the todo with the specified ID
     let item = todos.filter((todo) => (todo.id).toString() === id);
-
     return HttpResponse.json(item?.length?item[0]:{}, {status: 200});
   }),
 

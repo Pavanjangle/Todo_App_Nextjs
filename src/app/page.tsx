@@ -1,38 +1,30 @@
 "use client";
-import { Container } from "@mantine/core"; // Import Mantine Container
+import { Container } from "@mantine/core"; 
 import Todo from "@/components/Todo";
 import AddTask from "@/components/AddTask";
-import * as ReactDOM from "react-dom/client";
-import '@mantine/core/styles.css';
-import {
-  BrowserRouter,
-  createBrowserRouter,
-  Route,
-  RouterProvider,
-  Routes,
-} from "react-router-dom";
 import EditTask from "@/components/EditTask";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
+import MSWProvider from "./msw-provider"; 
+import "@mantine/core/styles.css";
+import { Routes, Route } from "react-router-dom";
 
 export default async function Home() {
-
   const ClientOnlyBrowserRouter = dynamic(() =>
-    import('react-router-dom').then(mod => mod.BrowserRouter),
+    import("react-router-dom").then((mod) => mod.BrowserRouter),
     { ssr: false }
   );
 
   return (
-    <Container>
-      <ClientOnlyBrowserRouter>
-        <Routes>
-          <Route path="/" element={<Todo />}>
-          </Route>
-          <Route path="/tasks/new" element={<AddTask />} />
-
-          <Route path="/tasks/:id/edit" element={<EditTask />} />
-        </Routes>
-      </ClientOnlyBrowserRouter>
-    </Container>
-
+    <MSWProvider>
+      <Container>
+        <ClientOnlyBrowserRouter>
+          <Routes>
+            <Route path="/" element={<Todo />} />
+            <Route path="/tasks/new" element={<AddTask />} />
+            <Route path="/tasks/:id/edit" element={<EditTask />} />
+          </Routes>
+        </ClientOnlyBrowserRouter>
+      </Container>
+    </MSWProvider>
   );
 }

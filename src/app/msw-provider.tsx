@@ -2,7 +2,11 @@
 
 import { MantineProvider } from "@mantine/core";
 import { Suspense, use } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactNode } from "react";
 
+
+const queryClient = new QueryClient();
 const mockingEnabledPromise =
   typeof window !== "undefined"
     ? import("../mocks/browser").then(async ({ worker }) => {
@@ -19,15 +23,9 @@ const mockingEnabledPromise =
       })
     : Promise.resolve();
 
-export function MSWProvider({ children }: { children: React.ReactNode }) {
-  // If MSW is enabled, we need to wait for the worker to start,
-  // so we wrap the children in a Suspense boundary until it's ready.
-  return (
-    <Suspense fallback={null}>
-      <MSWProviderWrapper>{children}</MSWProviderWrapper>
-    </Suspense>
-  );
-}
+    export default function MSWProvider({ children }: { children: ReactNode }) {
+      return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+    }
 
 function MSWProviderWrapper({ children }: { children: React.ReactNode }) {
   use(mockingEnabledPromise);
