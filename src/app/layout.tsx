@@ -4,6 +4,7 @@ import { MantineProvider } from "@mantine/core"; // Import MantineProvider
 import { MSWProvider } from "./msw-provider";
 import "./globals.css";
 
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -21,10 +22,10 @@ export const metadata: Metadata = {
 };
 
 // Enable server-side mocking
-if (process.env.NEXT_RUNTIME === "nodejs") {
-  const { server } = require("../mocks/server");
-  server.listen();
-}
+// if (process.env.NEXT_RUNTIME === "nodejs") {
+//   const { server } = require("../mocks/server");
+//   server.listen();
+// }
 
 export default function RootLayout({
   children,

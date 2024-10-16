@@ -1,25 +1,23 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
-import { validationSchema } from "@/Utlis/Validation";
 import { saveTodo } from "@/Utlis/api";
-import { useNavigate, } from "react-router-dom";
+import { useRouter } from 'next/navigation';
+import useInputRegister from "@/Utlis/useInputRegister";
+
 
 const AddTask = () => {
-    const navigate = useNavigate();
+    const router = useRouter();
     const saveTask = async (data: { taskName: string }) => {
 
         const response = await saveTodo(data.taskName)
         if (response) {
-            navigate(-1)
+            router.back()
         }
     }
+    const {formObject}= useInputRegister();
     // Initialize useForm with Yup validation
-    const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitted } } = useForm<{ taskName: string }>({
-        resolver: yupResolver(validationSchema),
-    });
+    const { register, handleSubmit, formState: { errors, isSubmitted } } =formObject
+
     return (
         <form 
         onSubmit={handleSubmit(saveTask)} 

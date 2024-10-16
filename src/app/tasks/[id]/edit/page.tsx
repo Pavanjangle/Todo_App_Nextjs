@@ -1,22 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
-import { validationSchema } from "@/Utlis/Validation";
 import { editTodo, fetchTodoById, saveTodo } from "@/Utlis/api";
-import { useParams } from "react-router-dom";
-import { useNavigate, } from "react-router-dom";
+import { useRouter } from 'next/navigation';
+import useInputRegister from "@/Utlis/useInputRegister";
 
-const EditTask = () => {
 
+const EditTask = ({ params }: { params: { id: string } }) => {
+            const router = useRouter();
+    
     // Initialize useForm with Yup validation
-    const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitted } } = useForm<{ taskName: string }>({
-        resolver: yupResolver(validationSchema),
-    });
 
-    const navigate = useNavigate();
-    let { id } = useParams();
+    const {formObject}= useInputRegister();
+    // Initialize useForm with Yup validation
+    const { register, handleSubmit, setValue, formState: { errors, isSubmitted } } =formObject
+
+    let { id } = params;
     useEffect(() => {
         fetchTodoById(id).then(data => {
             setValue("taskName", data.taskName)
@@ -27,7 +25,7 @@ const EditTask = () => {
 
         const response = await editTodo(data.taskName, id)
         if (response) {
-            navigate(-1)
+            router.back()
         }
     }
     return (
