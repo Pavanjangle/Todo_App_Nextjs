@@ -11,7 +11,7 @@ const mockingEnabledPromise =
             if (request.url.includes("_next")) {
               return;
             }
-            print.warning();
+            // print.warning();
           },
         });
       })

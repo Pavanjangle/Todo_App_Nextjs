@@ -1,30 +1,32 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { TextInput } from '@mantine/core';
+import { Modal, TextInput, Button } from '@mantine/core';
 
 const Todo: React.FC = () => {
   const [todos, setTodos] = useState<{ id: number; taskName: string }[]>([]);
   const [newTodo, setNewTodo] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [editTodo, setEditTodo] = useState<{ id: number; taskName: string } | null>(null);
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
 
   // Function to fetch todos from the API
   const fetchTodos = async () => {
     try {
       const response = await fetch("/api/todos");
       if (!response.ok) {
-        setTodos([]); 
+        setTodos([]);
       } else {
         const data = await response.json();
         setTodos(data);
       }
     } catch (error) {
-      setTodos([]); 
+      setTodos([]);
     }
   };
 
   // Add new todo
   const addTodo = async () => {
-    if (!newTodo) return; 
+    if (!newTodo) return;
 
     try {
       const response = await fetch("/api/todos", {
@@ -32,18 +34,17 @@ const Todo: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ taskName: newTodo }), 
+        body: JSON.stringify({ taskName: newTodo }),
       });
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
 
-      const addedTodo = await response.json(); // Get added todo from response
-      setTodos((prev) => [...prev, addedTodo]); // Update the state with new todo
       setNewTodo(""); 
+      fetchTodos(); 
     } catch (error) {
-      console.error("Error adding TODO: ", error); // Log the error for debugging
+      console.error("Error adding TODO: ", error); 
     }
   };
 
@@ -56,32 +57,61 @@ const Todo: React.FC = () => {
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
-
       } else {
         fetchTodos();
       }
 
-      setTodos((prev) => prev.filter((todo) => todo.id !== id)); // Remove the deleted todo from state
+      setTodos((prev) => prev.filter((todo) => todo.id !== id)); 
     } catch (error) {
-      console.error("Error deleting TODO: ", error); // Log error for debugging
+      console.error("Error deleting TODO: ", error); 
+    }
+  };
+
+  // Open the edit modal and set the current todo for editing
+  const openEditModal = (todo: { id: number; taskName: string }) => {
+    setEditTodo(todo);
+    setEditModalOpen(true);
+  };
+
+  // Update the todo
+  const updateTodo = async () => {
+    if (!editTodo) return;
+
+    try {
+      const response = await fetch(`/api/todos/${editTodo.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ taskName: editTodo.taskName }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      fetchTodos(); 
+      setEditModalOpen(false); 
+      setEditTodo(null); 
+    } catch (error) {
+      console.error("Error updating TODO: ", error); 
     }
   };
 
   // Handle search input
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value); 
+    setSearchTerm(event.target.value);
   };
 
   // Effect to fetch todos on component mount
   useEffect(() => {
-    fetchTodos(); // Fetch todos when component mounts
-    
+    fetchTodos(); 
   }, []);
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-300">
-      <div className="bg-gray-200 shadow-lg rounded-lg p-8 max-w-md w-full">
-        <h1 className="text-2xl font-bold mb-6 text-center">TODO App</h1>
+    <div className="flex justify-center items-center min-h-screen bg-custom-gray">
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+        <h1 className="text-2xl font-bold mb-6 text-center">TODO APP</h1>
 
         {/* Search */}
         <input
@@ -89,7 +119,7 @@ const Todo: React.FC = () => {
           placeholder="Search TODOs..."
           value={searchTerm}
           onChange={handleSearch}
-          className="border p-2 mb-6 w-full rounded"
+          className="border p-2 mb-6 w-full rounded border-black border"
         />
 
         {/* Input and Submit Button */}
@@ -99,32 +129,93 @@ const Todo: React.FC = () => {
             value={newTodo}
             onChange={(e) => setNewTodo(e.target.value)}
             placeholder="Add a new TODO..."
-            className="border p-2 flex-grow mr-2 rounded"
+            className="border-black border p-2 flex-grow mr-2 rounded"
           />
-          <button
+          <Button
             onClick={addTodo}
-            className="bg-red-500 text-white px-5 rounded hover:bg-blue-600 transition duration-200"
+            styles={{
+              root: {
+                backgroundColor: "#238be6",
+                color: "white",
+                padding: "0.5rem 1.25rem",
+                borderRadius: "0.375rem",
+                transition: "background-color 200ms",
+                "&:hover": {
+                  backgroundColor: "#2563eb",
+                },
+              },
+            }}
           >
-            Add ToDO
-          </button>
+            Add TODO
+          </Button>
         </div>
 
         {/* TODO List */}
-        <ul className="list-disc pl-5">
+        <ul className="list-disc pl-5 font-bold">
           {todos
-            .filter((todo) => todo.taskName.toLowerCase().includes(searchTerm.toLowerCase()))
+            .filter((todo) =>
+              todo.taskName.toLowerCase().includes(searchTerm.toLowerCase())
+            )
             .map((todo) => (
               <li key={todo.id} className="flex justify-between items-center mb-4">
                 <span>{todo.taskName}</span>
-                <button
-                  onClick={() => deleteTodo(todo.id)}
-                  className="bg-gray-500 text-white px-3 py-2 rounded hover:bg-gray-600 transition duration-200"
-                >
-                  Delete
-                </button>
+                <div className="flex space-x-2">
+                  <Button
+                    onClick={() => openEditModal(todo)} 
+                    styles={{
+                      root: {
+                        backgroundColor: "green", 
+                        color: "white",
+                        padding: "0.5rem 0.75rem",
+                        borderRadius: "0.375rem",
+                        transition: "background-color 200ms",
+                        "&:hover": {
+                          backgroundColor: "#f8c291", 
+                        },
+                      },
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    onClick={() => deleteTodo(todo.id)}
+                    styles={{
+                      root: {
+                        backgroundColor: "#f56565", 
+                        color: "white",
+                        padding: "0.5rem 0.75rem",
+                        borderRadius: "0.375rem",
+                        transition: "background-color 200ms",
+                        "&:hover": {
+                          backgroundColor: "#c53030", 
+                        },
+                      },
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </div>
               </li>
             ))}
         </ul>
+
+        {/* Edit Modal */}
+        <Modal opened={editModalOpen} style={{zIndex:"1000"}} onClose={() => setEditModalOpen(false)} title="Edit TODO">
+          <TextInput
+            label="Task Name"
+            value={editTodo ? editTodo.taskName : ""}
+           
+            onChange={(e) =>
+              setEditTodo({ ...editTodo!, taskName: e.target.value })
+            }
+          />
+          <Button
+            onClick={updateTodo}
+            styles={{ root: { marginTop: "1rem" } }}
+          >
+            Update TODO
+          </Button>
+        </Modal>
       </div>
     </div>
   );
