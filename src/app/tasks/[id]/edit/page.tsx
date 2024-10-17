@@ -1,56 +1,59 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { editTodo, fetchTodoById, saveTodo } from "@/Utlis/api";
+import { useEditTodo, useTodoById } from "@/Utlis/api";
 import { useRouter } from 'next/navigation';
 import useInputRegister from "@/Utlis/useInputRegister";
 
 
 const EditTask = ({ params }: { params: { id: string } }) => {
-            const router = useRouter();
-    
-    // Initialize useForm with Yup validation
+  const router = useRouter();
+  let { id } = params;
+  const { data: todo, isLoading } = useTodoById(id!);
+  const editTaskMutation = useEditTodo(id!);
+  // Initialize useForm with Yup validation
 
-    const {formObject}= useInputRegister();
-    // Initialize useForm with Yup validation
-    const { register, handleSubmit, setValue, formState: { errors, isSubmitted } } =formObject
+  const { formObject } = useInputRegister();
+  // Initialize useForm with Yup validation
+  const { register, handleSubmit, setValue, formState: { errors, isSubmitted } } = formObject
 
-    let { id } = params;
-    useEffect(() => {
-        fetchTodoById(id).then(data => {
-            setValue("taskName", data.taskName)
-        });
 
-    }, [setValue]);
-    const updateTask = async (data: { taskName: string }) => {
-
-        const response = await editTodo(data.taskName, id)
-        if (response) {
-            router.back()
-        }
+  useEffect(() => {
+    if (todo) {
+      setValue("taskName", todo.taskName);
     }
-    return (
-        <form 
-        onSubmit={handleSubmit(updateTask)} 
-        className="max-w-lg mx-auto mt-20 p-8 bg-white rounded-lg shadow-md bg-gray-400"
+  }, [todo, setValue]);
+
+  const editTask = (data: { taskName: string }) => {
+    editTaskMutation.mutate(data.taskName, {
+      onSuccess: () => router.back()
+    });
+  };
+
+  if (isLoading) return <p>Loading...</p>;
+
+  return (
+    <form
+      onSubmit={handleSubmit(editTask)}
+      className="max-w-md mx-auto mt-20 p-6 rounded-lg shadow-lg bg-gray-300"
+    >
+      <input
+        type="text"
+        placeholder="Task name"
+        className="border p-2 mb-3 w-full rounded border-black"
+        {...register("taskName")}
+      />
+      {errors.taskName && isSubmitted && (
+        <p className="text-red-400">{errors.taskName.message}</p>
+      )}
+      <button
+        type="submit"
+        className="bg-blue-600 text-white px-4 py-2 rounded w-full"
       >
-          <input
-            type="text"
-            placeholder="Task name"
-            className="border p-2 mb-4 w-full"
-            {...register('taskName')}
-          />
-          {errors.taskName && isSubmitted && <p className="text-red-500">{errors.taskName.message}</p>}
-          
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded w-full"
-          >
-            {"Update Task"}
-          </button>
-      </form>
-      
-    )
-}
+        {"Edit Task"}
+      </button>
+    </form>
+  );
+};
 
 export default EditTask;
 

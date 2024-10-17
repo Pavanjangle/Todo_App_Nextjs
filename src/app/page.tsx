@@ -1,22 +1,24 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
-
+import { useTodos, useDeleteTodo } from "@/Utlis/api";
+import ConfirmationModal from './ConfirmationModal';
 
 const Todo: React.FC = () => {
-  const [todos, setTodos] = useState<{ id: number; taskName: string }[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const router = useRouter()
+  const { data: todos = [], isLoading, error } = useTodos(); // Fetch todos
+  const deleteTodoMutation = useDeleteTodo(); // Delete todo mutation
+  const router = useRouter();
+  const [opened, setOpened] = useState(false);
+  const [todoIdToDelete, setTodoIdToDelete] = useState<number | null>(null);
 
   // Function to fetch todos from the API
-  const fetchTodos = async () => {
-    try {
-      const response = await fetch("/api/todos");
-      const data = await response.json();
-      setTodos(data);
-    } catch (error) {
-      setTodos([]);
-    }
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error loading todos</p>;
+
+  const handleDeleteClick = (id: number) => {
+    setTodoIdToDelete(id);  // Set the ID of the todo to delete
+    setOpened(true);        // Open the confirmation modal
   };
 
   // Open modal for adding new task
@@ -29,29 +31,17 @@ const Todo: React.FC = () => {
     router.push(`/tasks/${task.id}/edit`);
   };
 
-  // Delete todo function
-  const deleteTodo = async (id: number) => {
-    try {
-      await fetch(`/api/todos/${id}`, { method: "DELETE" });
-      setTodos((prev) => prev.filter((todo) => todo.id !== id));
-    } catch (error) {
-      console.error("Error deleting TODO: ", error);
+  const handleConfirmDelete = () => {
+    if (todoIdToDelete) {
+      deleteTodoMutation.mutate(todoIdToDelete);  // Delete the todo after confirmation
+      setOpened(false);          // Close the modal
+      setTodoIdToDelete(null);    // Reset the ID after deletion
     }
   };
 
-  // Handle search input
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
-
-  // Effect to fetch todos on component mount
-  useEffect(() => {
-    fetchTodos();
-  }, []);
-
   return (
-    <div className="flex justify-center items-center min-h-screen bg-white">
-      <div className="bg-gray-400 shadow-lg rounded-lg p-8 max-w-xl w-full">
+    <div className="flex justify-center items-center min-h-screen bg-custom-gray">
+      <div className="bg-gray-300 shadow-lg rounded-lg p-8 max-w-xl w-full">
         <h1 className="text-2xl font-bold mb-5 text-center">TODO App</h1>
 
         {/* Search */}
@@ -59,8 +49,8 @@ const Todo: React.FC = () => {
           type="text"
           placeholder="Search TODOs..."
           value={searchTerm}
-          onChange={handleSearch}
-          className="border p-2 mb-6 w-full rounded"
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border p-2 mb-6 w-full rounded rounded border-black"
         />
 
         {/* Add Todo Button */}
@@ -78,7 +68,10 @@ const Todo: React.FC = () => {
               todo.taskName.toLowerCase().includes(searchTerm.toLowerCase())
             )
             .map((todo) => (
-              <li key={todo.id} className="flex justify-between items-center mb-4">
+              <li
+                key={todo.id}
+                className="flex justify-between items-center mb-4 font-bold"
+              >
                 <span>{todo.taskName}</span>
                 <div>
                   <button
@@ -87,8 +80,9 @@ const Todo: React.FC = () => {
                   >
                     Edit
                   </button>
+
                   <button
-                    onClick={() => deleteTodo(todo.id)}
+                    onClick={() => handleDeleteClick(todo.id)} // Set the todo to delete
                     className="bg-red-500 text-white px-3 py-2 rounded"
                   >
                     Delete
@@ -97,6 +91,13 @@ const Todo: React.FC = () => {
               </li>
             ))}
         </ul>
+
+        {/* Confirmation Modal */}
+        <ConfirmationModal
+          opened={opened}
+          onClose={() => setOpened(false)}
+          onConfirm={handleConfirmDelete} // Handle confirmation and deletion
+        />
       </div>
     </div>
   );
