@@ -5,12 +5,16 @@ import { useReactTable, getCoreRowModel, getSortedRowModel, ColumnDef } from "@t
 import { useTodos, useDeleteTodo } from "@/Utlis/api";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import Table from "@/components/TodoTable";
+import RegisterForm from "@/components/RegisterForm"; // Import RegisterForm component
 import '@mantine/core/styles.css';
 import { Button } from "@mantine/core";
 
+
 const Todo: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const { data: todos = [], isLoading, error } = useTodos(); // Fetch todos
+
+  // Fetch todos
+  const { data: todos = [], isLoading, error } = useTodos();
   const deleteTodoMutation = useDeleteTodo(); // Delete todo mutation
   const router = useRouter();
   const [opened, setOpened] = useState(false);
@@ -119,6 +123,7 @@ const Todo: React.FC = () => {
   return (
     <div className="min-h-screen bg-custom-gray flex justify-center items-center">
       <div className="bg-gray-300 shadow-lg rounded-lg p-8 max-w-xl w-full">
+        <RegisterForm />
         <h1 className="text-2xl font-bold mb-5 text-center">TODO App</h1>
 
         <input

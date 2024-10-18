@@ -16,7 +16,6 @@ export const handlers = [
   http.get("/api/todos/:id", (req) => {
   
     const { id } = req.params;
-    console.log(id);
 
     // Filter out the todo with the specified ID
     let item = todos.filter((todo) => (todo.id).toString() === id);

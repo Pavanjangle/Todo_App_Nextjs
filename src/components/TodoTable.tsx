@@ -25,7 +25,7 @@ const Table: React.FC<TableProps> = ({ table, currentPage, totalPages, onPageCha
                   {header.column.getCanSort() ? (
                     <button
                       onClick={header.column.getToggleSortingHandler()}
-                      className="ml-8"
+                      className="ml-8 "
                     >
                       {header.column.getIsSorted() === "asc" ? "🔼" : "🔽"}
                     </button>
