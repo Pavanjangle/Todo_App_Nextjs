@@ -11,7 +11,8 @@ export const useTodos = () => {
         throw new Error("Network response was not ok");
       }
       return response.json();
-    }
+    },
+    enabled:true
   });
 };
 
@@ -44,7 +45,6 @@ export const useSaveTodo = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] })
-
     },
   });
 };
@@ -82,7 +82,6 @@ export const useDeleteTodo = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] })
-
     },
   });
 };
