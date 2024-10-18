@@ -50,9 +50,9 @@ const Todo: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-white">
-      <div className="bg-gray-400 shadow-lg rounded-lg p-8 max-w-xl w-full">
-        <h1 className="text-2xl font-bold mb-5 text-center">TODO App</h1>
+    <div className="flex justify-center items-center min-h-screen bg-custom-gray">
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-xl w-full">
+        <h1 className="text-2xl font-bold mb-5 text-center">TODO APP</h1>
 
         {/* Search */}
         <input
@@ -60,7 +60,7 @@ const Todo: React.FC = () => {
           placeholder="Search TODOs..."
           value={searchTerm}
           onChange={handleSearch}
-          className="border p-2 mb-6 w-full rounded"
+          className="border p-2 mb-6 w-full rounded border-black border"
         />
 
         {/* Add Todo Button */}
@@ -72,7 +72,7 @@ const Todo: React.FC = () => {
         </button>
 
         {/* TODO List */}
-        <ul className="list-disc pl-5">
+        <ul className="list-disc pl-5 font-bold">
           {todos
             .filter((todo) =>
               todo.taskName.toLowerCase().includes(searchTerm.toLowerCase())
