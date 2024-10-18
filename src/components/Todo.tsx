@@ -26,7 +26,8 @@ const Todo: React.FC = () => {
 
   // Add new todo
   const addTodo = async () => {
-    if (!newTodo) return;
+    const trimmedTodo = newTodo.trim();
+    if (!trimmedTodo) return;
 
     try {
       const response = await fetch("/api/todos", {
@@ -34,7 +35,7 @@ const Todo: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ taskName: newTodo }),
+        body: JSON.stringify({ taskName: trimmedTodo }),
       });
 
       if (!response.ok) {
@@ -47,7 +48,7 @@ const Todo: React.FC = () => {
       console.error("Error adding TODO: ", error); 
     }
   };
-
+``
   // Delete todo function
   const deleteTodo = async (id: number) => {
     try {
@@ -77,13 +78,16 @@ const Todo: React.FC = () => {
   const updateTodo = async () => {
     if (!editTodo) return;
 
+    const trimmedTaskName = editTodo.taskName.trim();
+    if (!trimmedTaskName) return;  
+
     try {
       const response = await fetch(`/api/todos/${editTodo.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ taskName: editTodo.taskName }),
+        body: JSON.stringify({ taskName: trimmedTaskName }),
       });
 
       if (!response.ok) {
@@ -200,11 +204,10 @@ const Todo: React.FC = () => {
         </ul>
 
         {/* Edit Modal */}
-        <Modal opened={editModalOpen} style={{zIndex:"1000"}} onClose={() => setEditModalOpen(false)} title="Edit TODO">
+        <Modal opened={editModalOpen} style={{ zIndex: "1000" }} onClose={() => setEditModalOpen(false)} title="Edit TODO">
           <TextInput
             label="Task Name"
             value={editTodo ? editTodo.taskName : ""}
-           
             onChange={(e) =>
               setEditTodo({ ...editTodo!, taskName: e.target.value })
             }
