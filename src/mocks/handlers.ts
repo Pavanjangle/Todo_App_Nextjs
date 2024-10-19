@@ -1,9 +1,13 @@
-// handler.tsx
-
 import { http, HttpResponse } from "msw";
 
 // Initialize an in-memory list of todos
 let todos: { id: number; taskName: string }[] = [];
+
+interface Task {
+  id: number;
+  taskName: string;
+  // add other properties as needed
+}
 
 // Helper function to generate unique IDs
 const generateId = () => (todos.length ? Math.max(...todos.map((todo) => todo.id)) + 1 : 1);
@@ -16,7 +20,7 @@ export const handlers = [
 
   // Intercept "POST /api/todos" requests to add a new todo
   http.post("/api/todos", async (req) => {
-    const { taskName } = await req.request.json(); 
+    const { taskName } = await req.request.json() as Task;                                              
 
     // Create a new todo item
     const newTodo = { id: generateId(), taskName };
@@ -38,7 +42,7 @@ export const handlers = [
   // Intercept "PUT /api/todos/:id" requests to update a todo
   http.put("/api/todos/:id", async (req) => {
     const { id } = req.params;
-    const { taskName } = await req.request.json();
+    const { taskName } = await req.request.json() as Task;
 
     // Update the todo with the specified ID
     const todoIndex = todos.findIndex((todo) => todo.id.toString() === id);
