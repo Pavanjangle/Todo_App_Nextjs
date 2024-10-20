@@ -1,9 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useEditTodo, useTodoById } from "@/Utlis/api";
+import { useEditTodo, useTodoById } from "@/utlis/api";
 import { useRouter } from 'next/navigation';
-import useInputRegister from "@/Utlis/useInputRegister";
-
+import useInputRegister from "@/utlis/useInputRegister";
 
 const EditTask = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
@@ -15,7 +14,6 @@ const EditTask = ({ params }: { params: { id: string } }) => {
   const { formObject } = useInputRegister();
   // Initialize useForm with Yup validation
   const { register, handleSubmit, setValue, formState: { errors, isSubmitted } } = formObject
-
 
   useEffect(() => {
     if (todo) {

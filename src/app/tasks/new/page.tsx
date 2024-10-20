@@ -1,9 +1,7 @@
 "use client";
-import { useSaveTodo } from "@/Utlis/api";
+import { useSaveTodo } from "@/utlis/api";
 import { useRouter } from 'next/navigation';
-import useInputRegister from "@/Utlis/useInputRegister";
-
-
+import useInputRegister from "@/utlis/useInputRegister";
 
 const AddTask = () => {
     const router = useRouter();
@@ -38,7 +36,6 @@ const AddTask = () => {
             </button>
           
         </form>
-
     )
 }
 

@@ -2,13 +2,13 @@
 import React, { useMemo, useState } from "react";
 import { useRouter } from 'next/navigation';
 import { useReactTable, getCoreRowModel, getSortedRowModel, ColumnDef } from "@tanstack/react-table";
-import { useTodos, useDeleteTodo } from "@/Utlis/api";
+import { useTodos, useDeleteTodo } from "@/utlis/api";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import Table from "@/components/TodoTable";
-import RegisterForm from "@/components/RegisterForm"; // Import RegisterForm component
+import RegisterForm from "@/components/RegisterForm";
 import '@mantine/core/styles.css';
 import { Button } from "@mantine/core";
-
+import CustomButton from "./sharedComponent/Button";
 
 const Todo: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -64,10 +64,10 @@ const Todo: React.FC = () => {
             variant="dark"
             styles={{
               root: {
-                backgroundColor: '#4CAF50', 
-                color: 'black', 
+                backgroundColor: '#4CAF50',
+                color: 'black',
                 '&:hover': {
-                  backgroundColor: '#bdbdbd', 
+                  backgroundColor: '#bdbdbd',
                 },
               },
             }}
@@ -80,10 +80,10 @@ const Todo: React.FC = () => {
             variant="light"
             styles={{
               root: {
-                backgroundColor: '#ff4d4d', 
-                color: '#000', 
+                backgroundColor: '#ff4d4d',
+                color: '#000',
                 '&:hover': {
-                  backgroundColor: '#cc0000', 
+                  backgroundColor: '#cc0000',
                 },
               },
             }}
@@ -97,7 +97,7 @@ const Todo: React.FC = () => {
   ], []);
 
   const filteredData = useMemo(() =>
-    todos.filter(todo => todo.taskName.toLowerCase().includes(searchTerm.toLowerCase())),
+    todos.filter((todo: { taskName: string; }) => todo.taskName.toLowerCase().includes(searchTerm.toLowerCase())),
     [todos, searchTerm]
   );
 
@@ -133,11 +133,7 @@ const Todo: React.FC = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border p-2 mb-6 w-full rounded border-black border"
         />
-
-        <Button onClick={handleAdd} color="blue" fullWidth className="mb-4">
-          Add New TODO
-        </Button>
-
+        <CustomButton title="Add New TODO" onClick={handleAdd} />
         {/* Render the Table component */}
         <Table
           table={table}
