@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
+import CustomButton from "./sharedComponent/Button";
 
 
 const Todo: React.FC = () => {
@@ -33,7 +34,7 @@ const Todo: React.FC = () => {
   const deleteTodo = async (id: number) => {
     try {
       await fetch(`/api/todos/${id}`, { method: "DELETE" });
-      setTodos((prev) => prev.filter((todo) => todo.id !== id));
+      fetchTodos()
     } catch (error) {
       console.error("Error deleting TODO: ", error);
     }
@@ -62,14 +63,7 @@ const Todo: React.FC = () => {
           onChange={handleSearch}
           className="border p-2 mb-6 w-full rounded border-black border"
         />
-
-        {/* Add Todo Button */}
-        <button
-          onClick={handleAdd}
-          className="bg-blue-600 text-white px-5 py-2 rounded mb-4 w-full"
-        >
-          Add New TODO
-        </button>
+        <CustomButton title="Add New TODO" onClick={handleAdd} />
 
         {/* TODO List */}
         <ul className="list-disc pl-5 font-bold">
