@@ -6,7 +6,6 @@ let todos: { id: number; taskName: string }[] = [];
 interface Task {
   id: number;
   taskName: string;
-  // add other properties as needed
 }
 
 // Helper function to generate unique IDs
