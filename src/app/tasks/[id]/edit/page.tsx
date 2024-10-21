@@ -1,12 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useEditTodo, useTodoById } from "@/utlis/api";
 import { useRouter } from 'next/navigation';
 import useInputRegister from "@/utlis/useInputRegister";
 
 const EditTask = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
-  let { id } = params;
+  const { id } = params;
   const { data: todo, isLoading } = useTodoById(id!);
   const editTaskMutation = useEditTodo(id!);
   // Initialize useForm with Yup validation

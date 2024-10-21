@@ -7,9 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
+   
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@hookform/resolvers": "^3.9.0",
     "@mantine/core": "^7.13.2",
     "@mantine/hooks": "^7.13.2",
@@ -24,8 +26,9 @@
     "zustand": "^5.0.0"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "1.9.0",
     "@types/node": "^20",
-    "@types/react": "^18",
+    "@types/react": "^18.3.11",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.11",

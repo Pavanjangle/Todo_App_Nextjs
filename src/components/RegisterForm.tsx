@@ -1,5 +1,5 @@
+import { emailValidation } from "@/utlis/dataValidation";
 import { useUserStore } from "@/utlis/useUserStore";
-import { emailValidation } from "@/utlis/Validation";
 import { Button, TextInput } from "@mantine/core";
 import { useState } from "react";
 
@@ -16,11 +16,9 @@ const RegisterForm: React.FC = () => {
   setErrors([]);
 })
 .catch((err) => {
-  setErrors(err.errors); // Set the errors state with the validation errors
+  setErrors(err.errors); 
 });
-   
   };
-
   const handleLogout = () => {
     clearUser();
     setName("");
