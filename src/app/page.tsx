@@ -2,20 +2,20 @@
 import React, { useMemo, useState } from "react";
 import { useRouter } from 'next/navigation';
 import { useReactTable, getCoreRowModel, getSortedRowModel, ColumnDef } from "@tanstack/react-table";
-import { useTodos, useDeleteTodo } from "@/utlis/api";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import Table from "@/components/TodoTable";
 import RegisterForm from "@/components/RegisterForm";
 import '@mantine/core/styles.css';
 import { Button } from "@mantine/core";
 import CustomButton from "./sharedComponent/Button";
+import { useDeleteTodo, useTodos } from "@/utils/api";
 
 const Todo: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   // Fetch todos
   const { data: todos = [], isLoading, error } = useTodos();
-  const deleteTodoMutation = useDeleteTodo(); // Delete todo mutation
+  const deleteTodoMutation = useDeleteTodo(); 
   const router = useRouter();
   const [opened, setOpened] = useState(false);
   const [todoIdToDelete, setTodoIdToDelete] = useState<number | null>(null);
