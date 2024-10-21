@@ -1,7 +1,7 @@
 "use client";
-import { useSaveTodo } from "@/utlis/api";
+import { useSaveTodo } from '@/utils/api';
+import useInputRegister from '@/utils/useInputRegister';
 import { useRouter } from 'next/navigation';
-import useInputRegister from "@/utlis/useInputRegister";
 
 const AddTask = () => {
     const router = useRouter();

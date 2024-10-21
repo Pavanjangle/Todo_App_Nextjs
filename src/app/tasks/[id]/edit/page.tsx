@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect } from "react";
-import { useEditTodo, useTodoById } from "@/utlis/api";
 import { useRouter } from 'next/navigation';
-import useInputRegister from "@/utlis/useInputRegister";
+import { useEditTodo, useTodoById } from "@/utils/api";
+import useInputRegister from "@/utils/useInputRegister";
 
 const EditTask = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
