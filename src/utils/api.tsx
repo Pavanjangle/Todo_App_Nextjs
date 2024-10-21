@@ -1,5 +1,4 @@
 "use client";
-
 export const saveTodo = async (taskName: string) => {
   try {
     // Add new todo
