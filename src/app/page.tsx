@@ -1,8 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
-import { useTodos, useDeleteTodo } from "@/Utlis/api";
-import ConfirmationModal from './ConfirmationModal';
+import { useTodos, useDeleteTodo } from "@/utlis/api";
+import ConfirmationModal from '../components/ConfirmationModal';
+import CustomButton from "./sharedComponent/Button";
 
 const Todo: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -17,8 +18,8 @@ const Todo: React.FC = () => {
   if (error) return <p>Error loading todos</p>;
 
   const handleDeleteClick = (id: number) => {
-    setTodoIdToDelete(id);  // Set the ID of the todo to delete
-    setOpened(true);        // Open the confirmation modal
+    setTodoIdToDelete(id);  
+    setOpened(true);       
   };
 
   // Open modal for adding new task
@@ -33,9 +34,9 @@ const Todo: React.FC = () => {
 
   const handleConfirmDelete = () => {
     if (todoIdToDelete) {
-      deleteTodoMutation.mutate(todoIdToDelete);  // Delete the todo after confirmation
-      setOpened(false);          // Close the modal
-      setTodoIdToDelete(null);    // Reset the ID after deletion
+      deleteTodoMutation.mutate(todoIdToDelete);  
+      setOpened(false);         
+      setTodoIdToDelete(null);   
     }
   };
 
@@ -54,20 +55,16 @@ const Todo: React.FC = () => {
         />
 
         {/* Add Todo Button */}
-        <button
-          onClick={handleAdd}
-          className="bg-blue-600 text-white px-5 py-2 rounded mb-4 w-full"
-        >
-          Add New TODO
-        </button>
+        <CustomButton title="Add New TODO" onClick={handleAdd} />
+
 
         {/* TODO List */}
         <ul className="list-disc pl-5">
           {todos
-            .filter((todo) =>
+            .filter((todo: { taskName: string; }) =>
               todo.taskName.toLowerCase().includes(searchTerm.toLowerCase())
             )
-            .map((todo) => (
+            .map((todo: { id: any; taskName: any; }) => (
               <li
                 key={todo.id}
                 className="flex justify-between items-center mb-4 font-bold"
@@ -82,7 +79,7 @@ const Todo: React.FC = () => {
                   </button>
 
                   <button
-                    onClick={() => handleDeleteClick(todo.id)} // Set the todo to delete
+                    onClick={() => handleDeleteClick(todo.id)} 
                     className="bg-red-500 text-white px-3 py-2 rounded"
                   >
                     Delete
@@ -96,7 +93,7 @@ const Todo: React.FC = () => {
         <ConfirmationModal
           opened={opened}
           onClose={() => setOpened(false)}
-          onConfirm={handleConfirmDelete} // Handle confirmation and deletion
+          onConfirm={handleConfirmDelete} 
         />
       </div>
     </div>

@@ -1,21 +1,17 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useEditTodo, useTodoById } from "@/Utlis/api";
+import React, { useEffect } from "react";
+import { useEditTodo, useTodoById } from "@/utlis/api";
 import { useRouter } from 'next/navigation';
-import useInputRegister from "@/Utlis/useInputRegister";
-
+import useInputRegister from "@/utlis/useInputRegister";
 
 const EditTask = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
-  let { id } = params;
+  const { id } = params;
   const { data: todo, isLoading } = useTodoById(id!);
   const editTaskMutation = useEditTodo(id!);
-  // Initialize useForm with Yup validation
 
   const { formObject } = useInputRegister();
-  // Initialize useForm with Yup validation
-  const { register, handleSubmit, setValue, formState: { errors, isSubmitted } } = formObject
-
+  const { register, handleSubmit, setValue, formState: { errors, isSubmitted } } = formObject;
 
   useEffect(() => {
     if (todo) {
@@ -24,9 +20,13 @@ const EditTask = ({ params }: { params: { id: string } }) => {
   }, [todo, setValue]);
 
   const editTask = (data: { taskName: string }) => {
-    editTaskMutation.mutate(data.taskName, {
-      onSuccess: () => router.back()
-    });
+    // Trim the task name to avoid submitting empty tasks
+    const trimmedTaskName = data.taskName.trim();
+    if (trimmedTaskName) {
+      editTaskMutation.mutate(trimmedTaskName, {
+        onSuccess: () => router.back(),
+      });
+    }
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -40,7 +40,7 @@ const EditTask = ({ params }: { params: { id: string } }) => {
         type="text"
         placeholder="Task name"
         className="border p-2 mb-3 w-full rounded border-black"
-        {...register("taskName")}
+        {...register("taskName", { required: 'Task name is required' })} // Adding required validation
       />
       {errors.taskName && isSubmitted && (
         <p className="text-red-400">{errors.taskName.message}</p>
@@ -56,4 +56,3 @@ const EditTask = ({ params }: { params: { id: string } }) => {
 };
 
 export default EditTask;
-

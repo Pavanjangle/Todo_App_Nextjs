@@ -49,7 +49,6 @@ export const useSaveTodo = () => {
   });
 };
 
-
 // Edit a todo
 export const useEditTodo = (id: string) => {
   const queryClient = useQueryClient();
