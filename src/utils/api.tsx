@@ -1,20 +1,35 @@
 "use client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+const mockTodos = [
+  { id: 1, title: 'Mock Todo 1', completed: false },
+  { id: 2, title: 'Mock Todo 2', completed: true },
+  // Add more mocked todos as needed
+];
+
 // Fetch all todos
 export const useTodos = () => {
   return useQuery({
-    queryKey: ["todos"], 
+    queryKey: ['todos'],
     queryFn: async () => {
-      const response = await fetch("/api/todos");
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+      const isMockingEnabled = process.env.NEXT_PUBLIC_API_MOCKING === 'true';
+      console.log('API Mocking Enabled:', process.env.NEXT_PUBLIC_API_MOCKING);
+      if (isMockingEnabled) {
+        // If mocking is enabled, return mock data
+        return mockTodos; // Return your mock data directly
+      } else {
+        // If not mocking, make the actual API call
+        const response = await fetch('/api/todos');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
       }
-      return response.json();
     },
-    enabled:true
+    enabled: true,
   });
 };
+
 
 // Fetch todo by ID
 export const useTodoById = (id: string) => {
