@@ -1,5 +1,5 @@
 "use client";
-import * as Yup from 'yup';
+import * as Yup from 'Yup';
 
 export const validationSchema = Yup.object().shape({
   taskName: Yup.string().required('Task name is required'),
