@@ -22,7 +22,6 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ opened, onClose, 
         </div>
       </div>
     </Modal>
-    
   );
 };
 

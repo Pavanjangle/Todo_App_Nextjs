@@ -1,14 +1,15 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { useTodos, useDeleteTodo } from "@/utlis/api";
 import ConfirmationModal from '../components/ConfirmationModal';
-import CustomButton from "./sharedComponent/Button";
+import CustomButton from "./sharedComponent/Button"; 
+import TodoList from "../components/TodoList";
 
 const Todo: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const { data: todos = [], isLoading, error } = useTodos(); // Fetch todos
-  const deleteTodoMutation = useDeleteTodo(); // Delete todo mutation
+  const { data: todos = [], isLoading, error } = useTodos();
+  const deleteTodoMutation = useDeleteTodo(); 
   const router = useRouter();
   const [opened, setOpened] = useState(false);
   const [todoIdToDelete, setTodoIdToDelete] = useState<number | null>(null);
@@ -51,43 +52,19 @@ const Todo: React.FC = () => {
           placeholder="Search TODOs..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="border p-2 mb-6 w-full rounded rounded border-black"
+          className="border p-2 mb-6 w-full rounded border-black"
         />
 
         {/* Add Todo Button */}
         <CustomButton title="Add New TODO" onClick={handleAdd} />
 
-
         {/* TODO List */}
-        <ul className="list-disc pl-5">
-          {todos
-            .filter((todo: { taskName: string; }) =>
-              todo.taskName.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .map((todo: { id: any; taskName: any; }) => (
-              <li
-                key={todo.id}
-                className="flex justify-between items-center mb-4 font-bold"
-              >
-                <span>{todo.taskName}</span>
-                <div>
-                  <button
-                    onClick={() => handleEdit(todo)}
-                    className="bg-green-600 text-white px-3 py-2 rounded mr-2"
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    onClick={() => handleDeleteClick(todo.id)} 
-                    className="bg-red-500 text-white px-3 py-2 rounded"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-        </ul>
+        <TodoList 
+          todos={todos} 
+          onEdit={handleEdit} 
+          onDelete={handleDeleteClick} 
+          searchTerm={searchTerm} 
+        />
 
         {/* Confirmation Modal */}
         <ConfirmationModal
