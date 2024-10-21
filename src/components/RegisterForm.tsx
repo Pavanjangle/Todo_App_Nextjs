@@ -1,5 +1,5 @@
-import { emailValidation } from "@/utlis/dataValidation";
-import { useUserStore } from "@/utlis/useUserStore";
+import { emailValidation } from "@/utils/dataValidation";
+import { useUserStore } from "@/utils/useUserStore";
 import { Button, TextInput } from "@mantine/core";
 import { useState } from "react";
 
