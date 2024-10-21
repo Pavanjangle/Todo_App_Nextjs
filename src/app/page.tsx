@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import CustomButton from "./sharedComponent/Button";
+import TodoList from "../components/TodoList"; 
 
 
 const Todo: React.FC = () => {
   const [todos, setTodos] = useState<{ id: number; taskName: string }[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const router = useRouter()
+  const router = useRouter();
 
   // Function to fetch todos from the API
   const fetchTodos = async () => {
@@ -26,15 +27,15 @@ const Todo: React.FC = () => {
   };
 
   // Open modal for editing existing task
-  const handleEdit = (task: { id: number; taskName: string }) => {
-    router.push(`/tasks/${task.id}/edit`);
+  const handleEdit = (id: number) => {
+    router.push(`/tasks/${id}/edit`);
   };
 
   // Delete todo function
   const deleteTodo = async (id: number) => {
     try {
       await fetch(`/api/todos/${id}`, { method: "DELETE" });
-      fetchTodos()
+      fetchTodos();
     } catch (error) {
       console.error("Error deleting TODO: ", error);
     }
@@ -66,31 +67,12 @@ const Todo: React.FC = () => {
         <CustomButton title="Add New TODO" onClick={handleAdd} />
 
         {/* TODO List */}
-        <ul className="list-disc pl-5 font-bold">
-          {todos
-            .filter((todo) =>
-              todo.taskName.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .map((todo) => (
-              <li key={todo.id} className="flex justify-between items-center mb-4">
-                <span>{todo.taskName}</span>
-                <div>
-                  <button
-                    onClick={() => handleEdit(todo)}
-                    className="bg-green-600 text-white px-3 py-2 rounded mr-2"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => deleteTodo(todo.id)}
-                    className="bg-red-500 text-white px-3 py-2 rounded"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-        </ul>
+        <TodoList
+          todos={todos}
+          searchTerm={searchTerm}
+          onEdit={handleEdit}
+          onDelete={deleteTodo}
+        />
       </div>
     </div>
   );

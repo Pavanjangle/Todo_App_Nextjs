@@ -20,7 +20,7 @@ const mockingEnabledPromise =
     : Promise.resolve();
 
 export function MSWProvider({ children }: { children: React.ReactNode }) {
-  // If MSW is enabled, we need to wait for the worker to start,
+  // If MSW is enabled, we need to wait for the worker to start.         
   // so we wrap the children in a Suspense boundary until it's ready.
   return (
     <Suspense fallback={null}>
@@ -33,9 +33,7 @@ function MSWProviderWrapper({ children }: { children: React.ReactNode }) {
   use(mockingEnabledPromise);
 
   return (
-    <MantineProvider
-      
-    >
+    <MantineProvider>
       {children}
     </MantineProvider>
   );

@@ -31,7 +31,6 @@ export default function RootLayout({
         {/* Wrap MantineProvider around MSWProvider */}
           {/* Enable client-side mocking */}
           <MSWProvider>{children}</MSWProvider>
-       
       </body>
     </html>
   );

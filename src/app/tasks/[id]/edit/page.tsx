@@ -11,7 +11,7 @@ const EditTask = ({ params }: { params: { id: string } }) => {
   
   const { register, handleSubmit, setValue, formState: { errors, isSubmitted } } = formObject;
 
-  let { id } = params;
+  const { id } = params;
 
   useEffect(() => {
     fetchTodoById(id).then(data => {

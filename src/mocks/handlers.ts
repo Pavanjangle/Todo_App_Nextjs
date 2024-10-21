@@ -21,7 +21,7 @@ export const handlers = [
   
     const { id } = req.params;
    
-    let item = todos.filter((todo) => (todo.id).toString() === id);
+    const item = todos.filter((todo) => (todo.id).toString() === id);
 
     return HttpResponse.json(item?.length?item[0]:{}, {status: 200});
   }),
