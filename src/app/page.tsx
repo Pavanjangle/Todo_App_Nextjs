@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
-import { useTodos, useDeleteTodo } from "@/utlis/api";
 import ConfirmationModal from '../components/ConfirmationModal';
 import CustomButton from "./sharedComponent/Button"; 
 import TodoList from "../components/TodoList";
+import { useDeleteTodo, useTodos } from "@/utils/api";
 
 const Todo: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");

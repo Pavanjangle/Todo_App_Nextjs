@@ -1,15 +1,14 @@
 "use client";
 import React from "react";
-import { useSaveTodo } from "@/utlis/api";
 import { useRouter } from 'next/navigation';
-import useInputRegister from "@/utlis/useInputRegister";
+import useInputRegister from "@/utils/useInputRegister";
+import { useSaveTodo } from "@/utils/api";
 
 const AddTask = () => {
     const router = useRouter();
     const saveTaskMutation = useSaveTodo();
 
     const saveTask = (data: { taskName: string }) => {
-        // Trim the task name to avoid adding empty tasks
         const trimmedTaskName = data.taskName.trim();
         if (trimmedTaskName) {
             saveTaskMutation.mutate(trimmedTaskName, {
