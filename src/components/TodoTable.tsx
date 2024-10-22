@@ -4,7 +4,7 @@ import { Table, Pagination, Button, Select, Group } from '@mantine/core';
 interface DataItem {
   id: number;
   taskName: string;
-  data: any[];
+  data: unknown[];
 }
 
 interface PaginatedSortableTableProps {
@@ -49,76 +49,76 @@ const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({ data, h
   // Handle page size change
   const handlePageSizeChange = (value: number) => {
     setPageSize(value);
-    setCurrentPage(1); // Reset to first page when changing page size
+    setCurrentPage(1); 
   };
 
   return (
-    <div>
-      <Table>
-        <thead>
-          <tr>
-            <th>
-              <Button variant="subtle" onClick={() => handleSort('id')}>
-                ID {sortBy === 'id' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+    <div className="p-4 bg-white shadow-md rounded-lg">
+    <Table>
+      <thead className="bg-gray-300">
+        <tr>
+          <th className="text-xl font-bold text-gray-800">
+            <Button variant="subtle" onClick={() => handleSort('id')} className="hover:underline text-gray-800">
+              ID {sortBy === 'id' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+            </Button>
+          </th>
+          <th className="text-xl font-bold text-gray-800">
+            <Button variant="subtle" onClick={() => handleSort('TaskName')} className="hover:underline text-gray-800">
+              Task {sortBy === 'TaskName' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+            </Button>
+          </th>
+          <th className="text-sm font-semibold text-gray-800">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {currentData.map((item) => (
+          <tr key={item.id} className="border-b border-gray-700">
+            <td className="font-bold text-gray-800">{item.id}</td>
+            <td className="font-medium text-gray-700">{item.taskName}</td>
+            <td>
+              <Button
+                onClick={() => handleAction(item.id, "Yes")} // Edit action
+                variant="light"
+                color="green"
+                className="mr-2"
+              >
+                Edit
               </Button>
-            </th>
-            <th>
-              <Button variant="subtle" onClick={() => handleSort('TaskName')}>
-                Task {sortBy === 'TaskName' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+              <Button
+                onClick={() => handleAction(item.id, "Delete")} // Delete action
+                variant="light"
+                color="red"
+              >
+                Delete
               </Button>
-            </th>
-            <th>
-              <Button variant="subtle">
-                Action 
-              </Button>
-            </th>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {currentData.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.taskName}</td>
-              <td>
-                <Button
-                  onClick={() => handleAction(item.id, "Yes")} // Edit action
-                  variant="dark"
-                >
-                  Edit
-                </Button>
-                <Button
-                  onClick={() => handleAction(item.id, "Delete")} // Delete action
-                  color="red"
-                  variant="light"
-                  className="ml-2"
-                >
-                  Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-
-      <Group position="apart" mt="md">
-        <Select
-          value={pageSize}
-          onChange={(value) => handlePageSizeChange(Number(value))}
-          data={[5, 10, 15, 20].map((size) => ({
-            value: size.toString(),
-            label: size.toString(),
-          }))}
-          label="Rows per page"
-          style={{ width: '120px' }}
-        />
-        <Pagination
-          page={currentPage}
-          onChange={setCurrentPage}
-          total={totalPages}
-          position="center"
-        />
-      </Group>
-    </div>
+        ))}
+      </tbody>
+    </Table>
+  
+    <Group position="apart" mt="md">
+      <Select
+        value={pageSize}
+        onChange={(value) => handlePageSizeChange(Number(value))}
+        data={[5, 10, 15, 20].map((size) => ({
+          value: size.toString(),
+          label: size.toString(),
+        }))}
+        label="Rows per page"
+        className="text-xs"
+        styles={{ dropdown: { fontSize: '12px' } }}
+      />
+      <Pagination
+        page={currentPage}
+        onChange={setCurrentPage}
+        total={totalPages}
+        position="center"
+        className="text-xs"
+      />
+    </Group>
+  </div>
+  
   );
 };
 

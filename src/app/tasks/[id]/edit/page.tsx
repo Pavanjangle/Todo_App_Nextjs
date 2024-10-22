@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEditTodo, useTodoById } from "@/utils/api";
 import useInputRegister from "@/utils/useInputRegister";
 
-const EditTask = ({ params }: { params: { id: string, onConfirm:Function } }) => {
+const EditTask = ({ params }: { params: { id: string} }) => {
   const router = useRouter();
   const { id } = params;
   const { data: todo, isLoading } = useTodoById(id!);
@@ -39,7 +39,7 @@ const EditTask = ({ params }: { params: { id: string, onConfirm:Function } }) =>
         type="text"
         placeholder="Task name"
         className="border p-2 mb-3 w-full rounded border-black"
-        {...register("taskName", { required: 'Task name is required' })} // Adding required validation
+        {...register("taskName", { required: 'Task name is required' })} 
       />
       {errors.taskName && isSubmitted && (
         <p className="text-red-400">{errors.taskName.message}</p>
