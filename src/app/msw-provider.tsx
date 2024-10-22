@@ -1,5 +1,4 @@
 "use client";
-
 import { MantineProvider } from "@mantine/core";
 import { Suspense, use } from "react";
 

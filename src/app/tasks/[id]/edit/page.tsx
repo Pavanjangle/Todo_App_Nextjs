@@ -1,21 +1,18 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
-import useInputRegister from "@/utils/useInputRegister";
 import { editTodo, fetchTodoById } from "@/utils/api";
+import NewUpdateTask from "@/app/sharedComponent/NewUpdateTask";
 
 const EditTask = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
-  
-  const { formObject } = useInputRegister();
-  
-  const { register, handleSubmit, setValue, formState: { errors, isSubmitted } } = formObject;
+  const [value, setValue] = useState("");
 
   const { id } = params;
 
   useEffect(() => {
     fetchTodoById(id).then(data => {
-      setValue("taskName", data.taskName);
+      setValue(data.taskName);
     });
   }, [setValue, id]);
 
@@ -34,27 +31,9 @@ const EditTask = ({ params }: { params: { id: string } }) => {
   };
 
   return (
-    <form 
-      onSubmit={handleSubmit(updateTask)} 
-      className="max-w-lg mx-auto mt-20 p-8 bg-white rounded-lg shadow-md bg-gray-400"
-    >
-      <input
-        type="text"
-        placeholder="Task name"
-        className="border p-2 mb-4 w-full border-black border"
-        {...register('taskName', {
-          validate: (value) => value.trim().length > 0 || "Task name cannot be empty"
-        })}
-      />
-      {errors.taskName && isSubmitted && <p className="text-red-500">{errors.taskName.message}</p>}
-      
-      <button
-        type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded w-full"
-      >
-        {"Update Task"}
-      </button>
-    </form>
+    <div>
+    <NewUpdateTask buttonTitle="Update Task" onSubmitTask={updateTask} value={value}/>
+   </div>
   );
 };
 
