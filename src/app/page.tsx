@@ -60,7 +60,7 @@ const Todo: React.FC = () => {
       cell: ({ row }) => (
         <div>
           <Button
-            onClick={() => handleEdit(row.original)}
+            onClick={() => handleEdit(row.original.id)}
             variant="dark"
             styles={{
               root: {
