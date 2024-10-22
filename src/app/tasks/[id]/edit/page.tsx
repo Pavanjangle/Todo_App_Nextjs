@@ -1,21 +1,17 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useEditTodo, useTodoById } from "@/Utlis/api";
+import React, { useEffect } from "react";
 import { useRouter } from 'next/navigation';
-import useInputRegister from "@/Utlis/useInputRegister";
+import { useEditTodo, useTodoById } from "@/utils/api";
+import useInputRegister from "@/utils/useInputRegister";
 
-
-const EditTask = ({ params }: { params: { id: string } }) => {
+const EditTask = ({ params }: { params: { id: string, onConfirm:Function } }) => {
   const router = useRouter();
-  let { id } = params;
+  const { id } = params;
   const { data: todo, isLoading } = useTodoById(id!);
   const editTaskMutation = useEditTodo(id!);
-  // Initialize useForm with Yup validation
 
   const { formObject } = useInputRegister();
-  // Initialize useForm with Yup validation
-  const { register, handleSubmit, setValue, formState: { errors, isSubmitted } } = formObject
-
+  const { register, handleSubmit, setValue, formState: { errors, isSubmitted } } = formObject;
 
   useEffect(() => {
     if (todo) {
@@ -24,9 +20,12 @@ const EditTask = ({ params }: { params: { id: string } }) => {
   }, [todo, setValue]);
 
   const editTask = (data: { taskName: string }) => {
-    editTaskMutation.mutate(data.taskName, {
-      onSuccess: () => router.back()
-    });
+    const trimmedTaskName = data.taskName.trim(); // Trim whitespace from the task name
+    if (trimmedTaskName) { // Only mutate if the trimmed task name is not empty
+      editTaskMutation.mutate(trimmedTaskName, {
+        onSuccess: () => router.back(),
+      });
+    }
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -40,7 +39,7 @@ const EditTask = ({ params }: { params: { id: string } }) => {
         type="text"
         placeholder="Task name"
         className="border p-2 mb-3 w-full rounded border-black"
-        {...register("taskName")}
+        {...register("taskName", { required: 'Task name is required' })} // Adding required validation
       />
       {errors.taskName && isSubmitted && (
         <p className="text-red-400">{errors.taskName.message}</p>
@@ -56,4 +55,3 @@ const EditTask = ({ params }: { params: { id: string } }) => {
 };
 
 export default EditTask;
-

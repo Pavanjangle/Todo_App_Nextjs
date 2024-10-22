@@ -1,32 +1,34 @@
 "use client";
-import { useSaveTodo } from "@/Utlis/api";
+import { useSaveTodo } from '@/utils/api';
+import useInputRegister from '@/utils/useInputRegister';
 import { useRouter } from 'next/navigation';
-import useInputRegister from "@/Utlis/useInputRegister";
-
-
 
 const AddTask = () => {
     const router = useRouter();
-    const saveTaskMutation = useSaveTodo()
+    const saveTaskMutation = useSaveTodo();
+
     const saveTask = (data: { taskName: string }) => {
-        saveTaskMutation.mutate(data.taskName, {
-            onSuccess: () => router.back()
-        });
+        const trimmedTaskName = data.taskName.trim(); // Trim whitespace from the task name
+        if (trimmedTaskName) { // Only mutate if the trimmed task name is not empty
+            saveTaskMutation.mutate(trimmedTaskName, {
+                onSuccess: () => router.back(),
+            });
+        }
     };
+
     const { formObject } = useInputRegister();
-    // Initialize useForm with Yup validation
-    const { register, handleSubmit, formState: { errors, isSubmitted } } = formObject
+    const { register, handleSubmit, formState: { errors, isSubmitted } } = formObject;
 
     return (
         <form
             onSubmit={handleSubmit(saveTask)}
-            className="max-w-md mx-auto mt-20 p-6 rounded-lg shadow-lg bg-gray-300 "
+            className="max-w-md mx-auto mt-20 p-6 rounded-lg shadow-lg bg-gray-300"
         >
             <input
                 type="text"
                 placeholder="Task name"
                 className="border p-2 mb-3 w-full rounded border-black"
-                {...register('taskName')}
+                {...register('taskName', { required: 'Task name is required' })} // Adding required validation
             />
             {errors.taskName && isSubmitted && <p className="text-red-500">{errors.taskName.message}</p>}
 
@@ -36,12 +38,8 @@ const AddTask = () => {
             >
                 {"Add Task"}
             </button>
-          
         </form>
-
-    )
+    );
 }
 
 export default AddTask;
-
-
