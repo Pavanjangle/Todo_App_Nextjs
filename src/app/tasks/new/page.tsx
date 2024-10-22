@@ -8,8 +8,8 @@ const AddTask = () => {
     const saveTaskMutation = useSaveTodo();
 
     const saveTask = (data: { taskName: string }) => {
-        const trimmedTaskName = data.taskName.trim(); // Trim whitespace from the task name
-        if (trimmedTaskName) { // Only mutate if the trimmed task name is not empty
+        const trimmedTaskName = data.taskName.trim();
+        if (trimmedTaskName) { 
             saveTaskMutation.mutate(trimmedTaskName, {
                 onSuccess: () => router.back(),
             });
@@ -28,7 +28,7 @@ const AddTask = () => {
                 type="text"
                 placeholder="Task name"
                 className="border p-2 mb-3 w-full rounded border-black"
-                {...register('taskName', { required: 'Task name is required' })} // Adding required validation
+                {...register('taskName', { required: 'Task name is required' })} 
             />
             {errors.taskName && isSubmitted && <p className="text-red-500">{errors.taskName.message}</p>}
 

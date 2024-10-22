@@ -23,7 +23,7 @@ export const handlers = [
 
 
     // Filter out the todo with the specified ID
-    let item = todos.filter((todo) => (todo.id).toString() === id);
+    const item = todos.filter((todo) => (todo.id).toString() === id);
 
     return HttpResponse.json(item?.length?item[0]:{}, {status: 200});
   }),

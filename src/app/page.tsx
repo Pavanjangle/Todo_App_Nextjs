@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useMemo, useState } from "react";
 import { useRouter } from 'next/navigation';
 import { useReactTable, getCoreRowModel, getSortedRowModel, ColumnDef } from "@tanstack/react-table";
-import { useTodos, useDeleteTodo } from "@/Utlis/api";
 import ConfirmationModal from "@/components/ConfirmationModal";
-import Table from "@/components/TodoTable";
+import PaginatedSortableTable from "@/components/TodoTable";
 import '@mantine/core/styles.css';
 import { Button } from "@mantine/core";
 import CustomButton from "./sharedComponent/Button";
+import { useDeleteTodo, useTodos } from "@/utils/api";
 
 const Todo: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -18,10 +19,6 @@ const Todo: React.FC = () => {
   const router = useRouter();
   const [opened, setOpened] = useState(false);
   const [taskId, setTaskId] = useState<number | null>(null);
-  const [pageSize, setPageSize] = useState(10);
-  const [data, setData] = useState([]);
-
-  // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
@@ -40,7 +37,6 @@ const Todo: React.FC = () => {
     setAction('');
   };
 
-
   const handleConfirmDelete = () => {
     if (taskId) {
       deleteTodoMutation.mutate(taskId);
@@ -48,11 +44,6 @@ const Todo: React.FC = () => {
       setTaskId(null);
       setAction('');
     }
-  };
-
-  const handlePageSizeChange = (size: number) => {
-    setPageSize(size);
-    setCurrentPage(1); // Reset to the first page on page size change
   };
 
   const columns = useMemo<ColumnDef<any>[]>(() => [
@@ -72,15 +63,6 @@ const Todo: React.FC = () => {
           <Button
             onClick={() => handleAction(row.original.id, "Yes")}
             variant="dark"
-            styles={{
-              root: {
-                backgroundColor: '#4CAF50',
-                color: 'black',
-                '&:hover': {
-                  backgroundColor: '#bdbdbd',
-                },
-              },
-            }}
           >
             Edit
           </Button>
@@ -88,15 +70,6 @@ const Todo: React.FC = () => {
             onClick={() => handleAction(row.original.id, "Delete")}
             color="red"
             variant="light"
-            styles={{
-              root: {
-                backgroundColor: '#ff4d4d',
-                color: '#000',
-                '&:hover': {
-                  backgroundColor: '#cc0000',
-                },
-              },
-            }}
             className="ml-2"
           >
             Delete
@@ -113,29 +86,14 @@ const Todo: React.FC = () => {
 
   // Calculate pagination
   const totalItems = filteredData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return filteredData.slice(startIndex, startIndex + itemsPerPage);
   }, [filteredData, currentPage, itemsPerPage]);
 
   // Setting up the table instance using useReactTable
-  const table = useReactTable({
-    data: paginatedData, // Use paginated data for the table
-    columns,
-    initialState: {
-      sorting: [{ id: 'taskName', desc: false }], // Apply default ascending sorting to the 'name' column
-    },
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-  });
-
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading todos</p>;
-
-  function handleSortChange(): void {
-    throw new Error("Function not implemented.");
-  }
 
   return (
     <div className="min-h-screen bg-custom-gray flex justify-center items-center">
@@ -153,18 +111,15 @@ const Todo: React.FC = () => {
         <CustomButton title="Add New TODO" onClick={handleAdd} />
 
 
-        {/* Render the Table component */}
-        <Table
-          table={tableInstance}
+        <PaginatedSortableTable
+
+          data={filteredData}
           currentPage={currentPage}
-          totalPages={Math.ceil(data.length / pageSize)}
-          onPageChange={setCurrentPage}
-          onSortChange={handleSortChange}
-          pageSize={pageSize}
-          // eslint-disable-next-line react/jsx-no-duplicate-props
-          onPageSizeChange={handlePageSizeChange} table={undefined} onSortChange={function (): void {
-            // throw new Error("Function not implemented.");
-          }} />
+          setCurrentPage={setCurrentPage}
+          itemsPerPage={itemsPerPage}
+          totalItems={totalItems}
+          handleAction={handleAction} // Pass handleAction to the table
+        />
 
         {/* Confirmation Modal */}
         <ConfirmationModal
