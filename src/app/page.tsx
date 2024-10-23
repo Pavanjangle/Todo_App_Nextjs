@@ -5,6 +5,7 @@ import ConfirmationModal from '../components/ConfirmationModal';
 import CustomButton from "./sharedComponent/Button"; 
 import TodoList from "../components/TodoList";
 import { useDeleteTodo, useTodos } from "@/utils/api";
+import SearchInput from "@/components/SearchInput";
 
 const Todo: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -41,20 +42,17 @@ const Todo: React.FC = () => {
     }
   };
 
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-custom-gray">
       <div className="bg-gray-300 shadow-lg rounded-lg p-8 max-w-xl w-full">
         <h1 className="text-2xl font-bold mb-5 text-center">TODO App</h1>
 
         {/* Search */}
-        <input
-          type="text"
-          placeholder="Search TODOs..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border p-2 mb-6 w-full rounded border-black"
-        />
-
+        <SearchInput value={searchTerm} onChange={handleSearch}/>
         {/* Add Todo Button */}
         <CustomButton title="Add New TODO" onClick={handleAdd} />
         {/* TODO List */}
