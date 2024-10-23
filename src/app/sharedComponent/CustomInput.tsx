@@ -8,8 +8,8 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     placeHolder: string;
     label?: string;
     error?: string;
-    name: string;
-    register: UseFormRegister<any>;
+    name: "taskName";
+    register: UseFormRegister<{ taskName: string}>;
     validate?: (value: string) => boolean | string;
   }
 
