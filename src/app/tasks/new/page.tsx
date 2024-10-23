@@ -10,7 +10,7 @@ const AddTask = () => {
   // Save the task after trimming spaces
   const saveTask = async (data: { taskName: string }) => {
     const trimmedTaskName = data.taskName.trim();
-    
+
     // Prevent saving empty or space-filled tasks
     if (trimmedTaskName.length === 0) {
       return;
@@ -23,9 +23,9 @@ const AddTask = () => {
   };
 
   return (
-   <div>
-    <NewUpdateTask buttonTitle="Add Task" onSubmitTask={saveTask} value={""}/>
-   </div>
+    <div>
+      <NewUpdateTask buttonTitle="Add Task" onSubmitTask={saveTask} value={""} />
+    </div>
   );
 };
 

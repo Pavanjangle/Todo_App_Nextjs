@@ -1,6 +1,7 @@
 "use client";
 export const saveTodo = async (taskName: string) => {
   try {
+    
     // Add new todo
     const response = await fetch("/api/todos", {
       method: "POST",

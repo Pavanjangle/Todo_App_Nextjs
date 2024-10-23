@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '@mantine/core';
 
 interface TodoItemProps {
   id: number;
@@ -12,18 +13,19 @@ const TodoItem: React.FC<TodoItemProps> = ({ taskName, onEdit, onDelete }) => {
     <li className="flex justify-between items-center mb-4">
       <span className="font-bold">{taskName}</span>
       <div>
-        <button
-          onClick={onEdit}
-          className="bg-green-600 text-white px-3 py-2 rounded mr-2"
+        <Button 
+          onClick={onEdit} 
+          className="mr-2" // Using Mantine's className prop for margin
+          color="green" // Mantine color prop for styling
         >
           Edit
-        </button>
-        <button
-          onClick={onDelete}
-          className="bg-red-500 text-white px-3 py-2 rounded"
+        </Button>
+        <Button 
+          onClick={onDelete} 
+          color="red" // Mantine color prop for styling
         >
           Delete
-        </button>
+        </Button>
       </div>
     </li>
   );

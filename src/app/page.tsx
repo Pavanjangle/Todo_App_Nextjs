@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import CustomButton from "./sharedComponent/Button";
 import TodoList from "../components/TodoList"; 
-
+import SearchInput from "@/components/SearchInput";
 
 const Todo: React.FC = () => {
   const [todos, setTodos] = useState<{ id: number; taskName: string }[]>([]);
@@ -57,15 +57,10 @@ const Todo: React.FC = () => {
         <h1 className="text-2xl font-bold mb-5 text-center">TODO APP</h1>
 
         {/* Search */}
-        <input
-          type="text"
-          placeholder="Search TODOs..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className="border p-2 mb-6 w-full rounded border-black border"
-        />
+        <SearchInput value={searchTerm} onChange={handleSearch}/>
+        
         <CustomButton title="Add New TODO" onClick={handleAdd} />
-
+        
         {/* TODO List */}
         <TodoList
           todos={todos}

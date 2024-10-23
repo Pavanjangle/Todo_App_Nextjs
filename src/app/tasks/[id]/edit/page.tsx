@@ -7,7 +7,6 @@ import NewUpdateTask from "@/app/sharedComponent/NewUpdateTask";
 const EditTask = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const [value, setValue] = useState("");
-
   const { id } = params;
 
   useEffect(() => {
