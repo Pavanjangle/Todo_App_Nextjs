@@ -30,7 +30,6 @@ export const useTodoById = (id: string) => {
 };
 
 // Add a new todo
-
 export const useSaveTodo = () => {
   const queryClient = useQueryClient();
   return useMutation({

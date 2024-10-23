@@ -30,11 +30,8 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {/* Wrap MantineProvider around MSWProvider */}
         <MantineProvider>
-          
         <QueryClientProvider client={queryClient}>
-            {/* Enable client-side mocking */}
             <MSWProvider>{children}</MSWProvider>
-            {/* React Query Devtools */}
             <ReactQueryDevtools initialIsOpen={true} />
           </QueryClientProvider>
         </MantineProvider>

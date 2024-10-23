@@ -57,7 +57,6 @@ const Todo: React.FC = () => {
 
         {/* Add Todo Button */}
         <CustomButton title="Add New TODO" onClick={handleAdd} />
-
         {/* TODO List */}
         <TodoList 
           todos={todos} 
@@ -65,7 +64,6 @@ const Todo: React.FC = () => {
           onDelete={handleDeleteClick} 
           searchTerm={searchTerm} 
         />
-
         {/* Confirmation Modal */}
         <ConfirmationModal
           opened={opened}
