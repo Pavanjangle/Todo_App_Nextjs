@@ -10,7 +10,6 @@ import { useDeleteTodo, useTodos } from "@/utils/api";
 const Todo: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [action, setAction] = useState<string>("");
-
   const { data: todos = [], isLoading, error } = useTodos(); // Fetch todos
   const deleteTodoMutation = useDeleteTodo(); // Delete todo mutation
   const router = useRouter();
@@ -19,7 +18,7 @@ const Todo: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
-  const handleAction = (id: number, action: string) => {
+  const handleAction =  (id: number, action: string) => {
     setAction(action);
     setTaskId(id);
     setOpened(true);

@@ -13,7 +13,8 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        'custom-gray': '#303a46'
+        'custom-gray': '#303a46',
+        customRed: 'rgb(250,82,82)',
       },
     },
   },

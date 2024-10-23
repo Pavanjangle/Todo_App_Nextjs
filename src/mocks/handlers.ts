@@ -20,9 +20,6 @@ export const handlers = [
   http.get("/api/todos/:id", (req) => {
   
     const { id } = req.params;
-
-
-    // Filter out the todo with the specified ID
     const item = todos.filter((todo) => (todo.id).toString() === id);
 
     return HttpResponse.json(item?.length?item[0]:{}, {status: 200});

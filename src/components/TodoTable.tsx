@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { Table, Pagination, Button, Select, Group } from '@mantine/core';
+import React, { useState, useMemo, SetStateAction, Dispatch } from 'react';
+import { Table, Pagination, Button, Select } from '@mantine/core';
 
 interface DataItem {
   id: number;
@@ -10,13 +10,17 @@ interface DataItem {
 interface PaginatedSortableTableProps {
   data: DataItem[];
   handleAction: (id: number, action: string) => void;
+  currentPage: number;
+  setCurrentPage: Dispatch<SetStateAction<number>>;
+  itemsPerPage: number;
+  totalItems: number;
 }
 
 const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({ data, handleAction }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
-  const [sortBy, setSortBy] = useState<null | string>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [sortBy, setSortBy] = useState<keyof DataItem | null>(null);
 
   // Sorting function
   const sortedData = useMemo(() => {
@@ -38,7 +42,7 @@ const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({ data, h
   const currentData = sortedData.slice(startIndex, startIndex + pageSize);
 
   // Handle sorting
-  const handleSort = (key: string) => {
+  const handleSort = (key: keyof DataItem) => {
     if (sortBy === key) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
@@ -49,76 +53,88 @@ const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({ data, h
   // Handle page size change
   const handlePageSizeChange = (value: number) => {
     setPageSize(value);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   return (
     <div className="p-4 bg-white shadow-md rounded-lg">
-    <Table>
-      <thead className="bg-gray-300">
-        <tr>
-          <th className="text-xl font-bold text-gray-800">
-            <Button variant="subtle" onClick={() => handleSort('id')} className="hover:underline text-gray-800">
-              ID {sortBy === 'id' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
-            </Button>
-          </th>
-          <th className="text-xl font-bold text-gray-800">
-            <Button variant="subtle" onClick={() => handleSort('TaskName')} className="hover:underline text-gray-800">
-              Task {sortBy === 'TaskName' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
-            </Button>
-          </th>
-          <th className="text-sm font-semibold text-gray-800">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {currentData.map((item) => (
-          <tr key={item.id} className="border-b border-gray-700">
-            <td className="font-bold text-gray-800">{item.id}</td>
-            <td className="font-medium text-gray-700">{item.taskName}</td>
-            <td>
+      <Table>
+        <thead className="bg-gray-300">
+          <tr>
+            <th className="text-lg font-bold text-gray-800 px-4 py-2">
               <Button
-                onClick={() => handleAction(item.id, "Yes")} // Edit action
-                variant="light"
-                color="green"
-                className="mr-2"
+                variant="subtle"
+                size="xs"
+                onClick={() => handleSort('id')}
+                className="hover:underline text-gray-800"
               >
-                Edit
+                ID {sortBy === 'id' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
               </Button>
+            </th>
+            <th className="text-lg font-bold text-gray-800 px-4 py-2">
               <Button
-                onClick={() => handleAction(item.id, "Delete")} // Delete action
-                variant="light"
-                color="red"
+                variant="subtle"
+                size="xs"
+                onClick={() => handleSort('taskName')}
+                className="hover:underline text-gray-800"
               >
-                Delete
+                Task {sortBy ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
               </Button>
-            </td>
+            </th>
+            <th className="text-sm font-semibold text-gray-800 px-4 py-2">Action</th>
           </tr>
-        ))}
-      </tbody>
-    </Table>
-  
-    <Group position="apart" mt="md">
-      <Select
-        value={pageSize}
-        onChange={(value) => handlePageSizeChange(Number(value))}
-        data={[5, 10, 15, 20].map((size) => ({
-          value: size.toString(),
-          label: size.toString(),
-        }))}
-        label="Rows per page"
-        className="text-xs"
-        styles={{ dropdown: { fontSize: '12px' } }}
-      />
-      <Pagination
-        page={currentPage}
-        onChange={setCurrentPage}
-        total={totalPages}
-        position="center"
-        className="text-xs"
-      />
-    </Group>
-  </div>
-  
+        </thead>
+        <tbody>
+          {currentData.map((item) => (
+            <tr key={item.id} className="border-b border-gray-700">
+              <td className="font-bold text-gray-800 px-4 py-2 w-[100px]">{item.id}</td>
+              <td className="font-medium text-gray-700 px-4 py-2 w-[300px]">{item.taskName}</td>
+              <td className="px-4 py-2 w-[200px] flex space-x-2">
+                <Button
+                  variant="filled"
+                  color="green"
+                  size="xs"
+                  onClick={() => handleAction(item.id, 'Yes')}
+                  className="w-[70px]"
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="filled"
+                  color="red"
+                  size="xs"
+                  onClick={() => handleAction(item.id, 'Delete')}
+                  className="w-[70px]"
+                >
+                  Delete
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+
+      <div className="flex justify-between items-center mt-4 ">
+        <Select
+          value={pageSize.toString()}
+          onChange={(value) => handlePageSizeChange(Number(value))}
+          data={[5, 10, 15, 20].map((size) => ({
+            value: size.toString(),
+            label: size.toString(),
+          }))}
+          size="xs"
+          className="text-xs border border-gray-500 rounded px-2 py-1 w-[80px] ml-0 "
+        />
+        <div className="text-xs flex justify-center mt-4">
+          <Pagination
+            value={currentPage}
+            onChange={setCurrentPage}
+            total={totalPages}
+            size="sm"
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 
