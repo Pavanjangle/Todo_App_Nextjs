@@ -1,19 +1,34 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import PaginatedSortableTable from "@/components/TodoTable";
-import '@mantine/core/styles.css';
+import "@mantine/core/styles.css";
 import CustomButton from "./sharedComponent/Button";
 import { useDeleteTodo, useTodos } from "@/utils/api";
 import SearchInput from "@/components/SearchInput";
 
 const Todo: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [handleFetch, sethandleFetch] = useState<boolean>(false)
-  const [params, setParams] = useState({ "page": "1", "limit": "5", "property": "taskName", "sort": "asc" })
+  const [handleFetch, sethandleFetch] = useState<boolean>(false);
+  const [params, setParams] = useState({
+    page: "1",
+    limit: "5",
+    property: "taskName",
+    sort: "asc",
+  });
   const [action, setAction] = useState<string>("");
-  const { data: todos = { data: [], totalPages: 0 }, isLoading, error } = useTodos(params.page, params.limit, params.property, params.sort, handleFetch); // Fetch todos
+  const {
+    data: todos = { data: [], totalPages: 0 },
+    isLoading,
+    error,
+  } = useTodos(
+    params.page,
+    params.limit,
+    params.property,
+    params.sort,
+    handleFetch
+  ); // Fetch todos
   const deleteTodoMutation = useDeleteTodo();
   const router = useRouter();
   const [opened, setOpened] = useState(false);
@@ -22,7 +37,7 @@ const Todo: React.FC = () => {
   const itemsPerPage = 4;
 
   useEffect(() => {
-    sethandleFetch(true)
+    sethandleFetch(true);
   }, [params]);
 
   const handleAction = (id: number, action: string) => {
@@ -37,7 +52,7 @@ const Todo: React.FC = () => {
 
   const handleEdit = () => {
     router.push(`/tasks/${taskId}/edit`);
-    setAction('');
+    setAction("");
   };
 
   const handleConfirmDelete = () => {
@@ -45,7 +60,7 @@ const Todo: React.FC = () => {
       deleteTodoMutation.mutate(taskId);
       setOpened(false);
       setTaskId(null);
-      setAction('');
+      setAction("");
     }
   };
 
@@ -53,9 +68,11 @@ const Todo: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-
-  const filteredData = useMemo(() =>
-    todos?.data?.filter((todo: { taskName: string; }) => todo.taskName.toLowerCase().includes(searchTerm.toLowerCase())),
+  const filteredData = useMemo(
+    () =>
+      todos?.data?.filter((todo: { taskName: string }) =>
+        todo.taskName.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
     [todos?.data, searchTerm]
   );
 
@@ -77,8 +94,18 @@ const Todo: React.FC = () => {
           itemsPerPage={itemsPerPage}
           totalPages={todos?.totalPages}
           handleAction={handleAction}
-          handleSorting={(page: string, limit: string, sortField: string, sortOrder: string) => {
-            const data = { "page": page, "limit": limit, "property": sortField, "sort": sortOrder }
+          handleSorting={(
+            page: string,
+            limit: string,
+            sortField: string,
+            sortOrder: string
+          ) => {
+            const data = {
+              page: page,
+              limit: limit,
+              property: sortField,
+              sort: sortOrder,
+            };
             setParams(data);
           }}
         />
@@ -87,12 +114,16 @@ const Todo: React.FC = () => {
           opened={opened}
           actionType={action}
           confirmButtonTitle={action}
-          message={action === 'Delete' ? 'Do you really want to delete this task?' : "Are you sure want to edit this task?"}
+          message={
+            action === "Delete"
+              ? "Do you really want to delete this task?"
+              : "Are you sure want to edit this task?"
+          }
           onClose={() => setOpened(false)}
           onConfirm={(action) => {
-            if (action === 'Delete') {
+            if (action === "Delete") {
               handleConfirmDelete();
-            } else if (action === 'Yes') {
+            } else if (action === "Yes") {
               handleEdit();
             }
           }}

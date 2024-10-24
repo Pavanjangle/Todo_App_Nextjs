@@ -1,5 +1,5 @@
-import React from 'react';
-import { TextInput } from '@mantine/core';
+import React from "react";
+import { TextInput } from "@mantine/core";
 
 interface SearchInputProps {
   value: string;
@@ -8,11 +8,7 @@ interface SearchInputProps {
 
 const SearchInput: React.FC<SearchInputProps> = ({ value, onChange }) => {
   return (
-    <TextInput
-      value={value}
-      onChange={onChange}
-      placeholder="Search TODO's"
-    />
+    <TextInput value={value} onChange={onChange} placeholder="Search TODO's" />
   );
 };
 

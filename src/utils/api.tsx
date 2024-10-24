@@ -2,31 +2,39 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // Fetch all todos
-export const useTodos = (page:string, limit:string, sortField:string, sortOrder:string, handleFetch:boolean) => {
+export const useTodos = (
+  page: string,
+  limit: string,
+  sortField: string,
+  sortOrder: string,
+  handleFetch: boolean
+) => {
   return useQuery({
-    queryKey: ['todos', page, limit, sortField, sortOrder], 
+    queryKey: ["todos", page, limit, sortField, sortOrder],
     queryFn: async () => {
-      const response = await fetch(`/api/todos/?page=${page}&limit=${limit}&sortField=${sortField}&sortOrder=${sortOrder}`);
+      const response = await fetch(
+        `/api/todos/?page=${page}&limit=${limit}&sortField=${sortField}&sortOrder=${sortOrder}`
+      );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       return response.json();
     },
-    enabled:handleFetch
+    enabled: handleFetch,
   });
 };
 
 // Fetch todo by ID
 export const useTodoById = (id: string) => {
   return useQuery({
-    queryKey: ["todo", id], 
+    queryKey: ["todo", id],
     queryFn: async () => {
       const response = await fetch(`/api/todos/${id}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       return response.json();
-    }
+    },
   });
 };
 
@@ -43,7 +51,7 @@ export const useSaveTodo = () => {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] })
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
     },
   });
 };
@@ -61,7 +69,7 @@ export const useEditTodo = (id: string) => {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] })
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
     },
   });
 };
@@ -79,7 +87,7 @@ export const useDeleteTodo = () => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] })
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
     },
   });
 };

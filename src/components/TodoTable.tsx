@@ -1,5 +1,5 @@
-import React, { useState, SetStateAction, Dispatch, useEffect} from 'react';
-import { Table, Pagination, Button, Select } from '@mantine/core';
+import React, { useState, SetStateAction, Dispatch, useEffect } from "react";
+import { Table, Pagination, Button, Select } from "@mantine/core";
 
 interface DataItem {
   id: number;
@@ -14,26 +14,41 @@ interface PaginatedSortableTableProps {
   setCurrentPage: Dispatch<SetStateAction<number>>;
   itemsPerPage: number;
   totalPages: number;
-  handleSorting:(page:string, limit:string, sortField:string, sortOrder:string) => void;
+  handleSorting: (
+    page: string,
+    limit: string,
+    sortField: string,
+    sortOrder: string
+  ) => void;
 }
 
-const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({ data, handleAction, handleSorting, totalPages}) => {
+const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({
+  data,
+  handleAction,
+  handleSorting,
+  totalPages,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  const [sortBy, setSortBy] = useState<keyof DataItem>('taskName');
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [sortBy, setSortBy] = useState<keyof DataItem>("taskName");
 
-  useEffect(() =>{
-    handleSorting(currentPage.toString(), pageSize.toString(), sortBy, sortDirection);
-  },[currentPage, pageSize, sortDirection, sortBy]);
+  useEffect(() => {
+    handleSorting(
+      currentPage.toString(),
+      pageSize.toString(),
+      sortBy,
+      sortDirection
+    );
+  }, [currentPage, pageSize, sortDirection, sortBy]);
 
   // Handle sorting
   const handleSort = (key: keyof DataItem) => {
     if (sortBy === key) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
       setSortBy(key);
-      setSortDirection('asc');
+      setSortDirection("asc");
     }
   };
 
@@ -52,36 +67,43 @@ const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({ data, h
               <Button
                 variant="subtle"
                 size="xs"
-                onClick={() => handleSort('id')}
+                onClick={() => handleSort("id")}
                 className="hover:underline text-gray-800"
               >
-                ID {sortBy === 'id' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+                ID{" "}
+                {sortBy === "id" ? (sortDirection === "asc" ? "↑" : "↓") : ""}
               </Button>
             </th>
             <th className="text-lg font-bold text-gray-800 px-4 py-2">
               <Button
                 variant="subtle"
                 size="xs"
-                onClick={() => handleSort('taskName')}
+                onClick={() => handleSort("taskName")}
                 className="hover:underline text-gray-800"
               >
-                Task {sortBy ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+                Task {sortBy ? (sortDirection === "asc" ? "↑" : "↓") : ""}
               </Button>
             </th>
-            <th className="text-sm font-semibold text-gray-800 px-4 py-2">Action</th>
+            <th className="text-sm font-semibold text-gray-800 px-4 py-2">
+              Action
+            </th>
           </tr>
         </thead>
         <tbody>
           {data.map((item) => (
             <tr key={item.id} className="border-b border-gray-700">
-              <td className="font-bold text-gray-800 px-4 py-2 w-[100px]">{item.id}</td>
-              <td className="font-medium text-gray-700 px-4 py-2 w-[300px]">{item.taskName}</td>
+              <td className="font-bold text-gray-800 px-4 py-2 w-[100px]">
+                {item.id}
+              </td>
+              <td className="font-medium text-gray-700 px-4 py-2 w-[300px]">
+                {item.taskName}
+              </td>
               <td className="px-4 py-2 w-[200px] flex space-x-2">
                 <Button
                   variant="filled"
                   color="green"
                   size="xs"
-                  onClick={() => handleAction(item.id, 'Yes')}
+                  onClick={() => handleAction(item.id, "Yes")}
                   className="w-[70px]"
                 >
                   Edit
@@ -90,7 +112,7 @@ const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({ data, h
                   variant="filled"
                   color="red"
                   size="xs"
-                  onClick={() => handleAction(item.id, 'Delete')}
+                  onClick={() => handleAction(item.id, "Delete")}
                   className="w-[70px]"
                 >
                   Delete
