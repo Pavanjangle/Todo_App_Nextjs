@@ -30,7 +30,7 @@ const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({ data, h
 
   useEffect(() =>{
     handleSorting(currentPage.toString(), pageSize.toString(), sortBy, sortDirection);
-  },[currentPage, pageSize, sortDirection, sortBy]);
+  },[currentPage, pageSize, sortDirection, sortBy, handleSorting]);
 
   // Handle sorting
   const handleSort = (key: keyof DataItem) => {
