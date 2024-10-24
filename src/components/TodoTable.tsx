@@ -1,4 +1,4 @@
-import React, { useState, SetStateAction, Dispatch, useEffect } from 'react';
+import React, { useState, SetStateAction, Dispatch, useEffect} from 'react';
 import { Table, Pagination, Button, Select } from '@mantine/core';
 
 interface DataItem {
@@ -23,14 +23,9 @@ const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({ data, h
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [sortBy, setSortBy] = useState<keyof DataItem>('taskName');
 
-  // useEffect(() => {
-  //   handleSorting(currentPage.toString(), pageSize.toString(), sortBy, sortDirection);
-  // }, [currentPage, pageSize, sortBy, sortDirection, handleSorting]);
-  
-
   useEffect(() =>{
     handleSorting(currentPage.toString(), pageSize.toString(), sortBy, sortDirection);
-  },[currentPage, pageSize, sortDirection, sortBy, handleSorting]);
+  },[currentPage, pageSize, sortDirection, sortBy]);
 
   // Handle sorting
   const handleSort = (key: keyof DataItem) => {
@@ -41,6 +36,7 @@ const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({ data, h
       setSortDirection('asc');
     }
   };
+
   // Handle page size change
   const handlePageSizeChange = (value: number) => {
     setPageSize(value);
