@@ -2,17 +2,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // Fetch all todos
-export const useTodos = () => {
+export const useTodos = (page:string, limit:string, sortField:string, sortOrder:string, handleFetch:boolean) => {
   return useQuery({
-    queryKey: ["todos"], 
+    queryKey: ['todos', page, limit, sortField, sortOrder], 
     queryFn: async () => {
-      const response = await fetch("/api/todos");
+      const response = await fetch(`/api/todos/?page=${page}&limit=${limit}&sortField=${sortField}&sortOrder=${sortOrder}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       return response.json();
     },
-    enabled:true
+    enabled:handleFetch
   });
 };
 
@@ -31,7 +31,6 @@ export const useTodoById = (id: string) => {
 };
 
 // Add a new todo
-
 export const useSaveTodo = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -48,7 +47,6 @@ export const useSaveTodo = () => {
     },
   });
 };
-
 
 // Edit a todo
 export const useEditTodo = (id: string) => {

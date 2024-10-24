@@ -1,24 +1,31 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from 'next/navigation';
 import ConfirmationModal from "@/components/ConfirmationModal";
 import PaginatedSortableTable from "@/components/TodoTable";
 import '@mantine/core/styles.css';
 import CustomButton from "./sharedComponent/Button";
 import { useDeleteTodo, useTodos } from "@/utils/api";
+import SearchInput from "@/components/SearchInput";
 
 const Todo: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [handleFetch, sethandleFetch] = useState<boolean>(false)
+  const [params, setParams] = useState({ "page": "1", "limit": "5", "property": "taskName", "sort": "asc" })
   const [action, setAction] = useState<string>("");
-  const { data: todos = [], isLoading, error } = useTodos(); // Fetch todos
-  const deleteTodoMutation = useDeleteTodo(); // Delete todo mutation
+  const { data: todos = { data: [], totalPages: 0 }, isLoading, error } = useTodos(params.page, params.limit, params.property, params.sort, handleFetch); // Fetch todos
+  const deleteTodoMutation = useDeleteTodo();
   const router = useRouter();
   const [opened, setOpened] = useState(false);
   const [taskId, setTaskId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
-  const handleAction =  (id: number, action: string) => {
+  useEffect(() => {
+    sethandleFetch(true)
+  }, [params]);
+
+  const handleAction = (id: number, action: string) => {
     setAction(action);
     setTaskId(id);
     setOpened(true);
@@ -42,13 +49,15 @@ const Todo: React.FC = () => {
     }
   };
 
-  const filteredData = useMemo(() =>
-    todos.filter((todo: { taskName: string; }) => todo.taskName.toLowerCase().includes(searchTerm.toLowerCase())),
-    [todos, searchTerm]
-  );
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
 
-  // Calculate pagination
-  const totalItems = filteredData.length;
+
+  const filteredData = useMemo(() =>
+    todos?.data?.filter((todo: { taskName: string; }) => todo.taskName.toLowerCase().includes(searchTerm.toLowerCase())),
+    [todos?.data, searchTerm]
+  );
 
   // Setting up the table instance using useReactTable
   if (isLoading) return <p>Loading...</p>;
@@ -58,21 +67,20 @@ const Todo: React.FC = () => {
     <div className="min-h-screen bg-custom-gray flex justify-center items-center">
       <div className="bg-gray-300 shadow-lg rounded-lg p-8 max-w-xl w-full">
         <h1 className="text-2xl font-bold mb-5 text-center">TODO App</h1>
-        <input
-          type="text"
-          placeholder="Search TODOs..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border p-2 mb-6 w-full rounded border-black border"
-        />
+
+        <SearchInput value={searchTerm} onChange={handleSearch} />
         <CustomButton title="Add New TODO" onClick={handleAdd} />
         <PaginatedSortableTable
           data={filteredData}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           itemsPerPage={itemsPerPage}
-          totalItems={totalItems}
-          handleAction={handleAction} // Pass handleAction to the table
+          totalPages={todos?.totalPages}
+          handleAction={handleAction}
+          handleSorting={(page: string, limit: string, sortField: string, sortOrder: string) => {
+            const data = { "page": page, "limit": limit, "property": sortField, "sort": sortOrder }
+            setParams(data);
+          }}
         />
         {/* Confirmation Modal */}
         <ConfirmationModal

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, SetStateAction, Dispatch } from 'react';
+import React, { useState, SetStateAction, Dispatch, useEffect } from 'react';
 import { Table, Pagination, Button, Select } from '@mantine/core';
 
 interface DataItem {
@@ -13,33 +13,24 @@ interface PaginatedSortableTableProps {
   currentPage: number;
   setCurrentPage: Dispatch<SetStateAction<number>>;
   itemsPerPage: number;
-  totalItems: number;
+  totalPages: number;
+  handleSorting:(page:string, limit:string, sortField:string, sortOrder:string) => void;
 }
 
-const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({ data, handleAction }) => {
+const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({ data, handleAction, handleSorting, totalPages}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  const [sortBy, setSortBy] = useState<keyof DataItem | null>(null);
+  const [sortBy, setSortBy] = useState<keyof DataItem>('taskName');
 
-  // Sorting function
-  const sortedData = useMemo(() => {
-    if (!sortBy) return data;
+  // useEffect(() => {
+  //   handleSorting(currentPage.toString(), pageSize.toString(), sortBy, sortDirection);
+  // }, [currentPage, pageSize, sortBy, sortDirection, handleSorting]);
+  
 
-    return [...data].sort((a, b) => {
-      if (sortDirection === 'asc') {
-        return a[sortBy] > b[sortBy] ? 1 : -1;
-      }
-      return a[sortBy] < b[sortBy] ? 1 : -1;
-    });
-  }, [data, sortBy, sortDirection]);
-
-  // Calculate total pages
-  const totalPages = Math.ceil(sortedData.length / pageSize);
-
-  // Get current page data
-  const startIndex = (currentPage - 1) * pageSize;
-  const currentData = sortedData.slice(startIndex, startIndex + pageSize);
+  useEffect(() =>{
+    handleSorting(currentPage.toString(), pageSize.toString(), sortBy, sortDirection);
+  },[currentPage, pageSize, sortDirection, sortBy]);
 
   // Handle sorting
   const handleSort = (key: keyof DataItem) => {
@@ -85,7 +76,7 @@ const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({ data, h
           </tr>
         </thead>
         <tbody>
-          {currentData.map((item) => (
+          {data.map((item) => (
             <tr key={item.id} className="border-b border-gray-700">
               <td className="font-bold text-gray-800 px-4 py-2 w-[100px]">{item.id}</td>
               <td className="font-medium text-gray-700 px-4 py-2 w-[300px]">{item.taskName}</td>
