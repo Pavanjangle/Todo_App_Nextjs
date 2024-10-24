@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { useEditTodo, useTodoById } from "@/utils/api";
 import NewUpdateTask from "@/app/sharedComponent/NewUpdateTask";
 
@@ -30,7 +30,11 @@ const EditTask = ({ params }: { params: { id: string } }) => {
 
   return (
     <div>
-      <NewUpdateTask buttonTitle="Update Task" onSubmitTask={updateTask} value={value} />
+      <NewUpdateTask
+        buttonTitle="Update Task"
+        onSubmitTask={updateTask}
+        value={value}
+      />
     </div>
   );
 };

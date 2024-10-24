@@ -9,15 +9,17 @@ const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState(user?.email || "");
   const [errors, setErrors] = useState([]);
 
-  const handleSubmit =  (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
- emailValidation.validate({'email':email}).then(() => {
-  setUser({ name, email });
-  setErrors([]);
-})
-.catch((err) => {
-  setErrors(err.errors); 
-});
+    emailValidation
+      .validate({ email: email })
+      .then(() => {
+        setUser({ name, email });
+        setErrors([]);
+      })
+      .catch((err) => {
+        setErrors(err.errors);
+      });
   };
   const handleLogout = () => {
     clearUser();
@@ -45,10 +47,13 @@ const RegisterForm: React.FC = () => {
               required
               className="mb-4 "
             />
-            {(errors && errors.length) ? (
+            {errors && errors.length ? (
               <p className="text-red-400">{errors[0]}</p>
-            ): null}
-            <Button type="submit" className="bg-blue-500 hover:bg-blue-600 w-full">
+            ) : null}
+            <Button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-600 w-full"
+            >
               Submit
             </Button>
           </form>
@@ -56,9 +61,13 @@ const RegisterForm: React.FC = () => {
       ) : (
         <div>
           <h2 className="text-xl font-bold mb-4">Welcome, {user.name}!</h2>
-          <p className="font-bold" >Email : {user.email}</p>
+          <p className="font-bold">Email : {user.email}</p>
 
-          <Button onClick={handleLogout} color="red" className="bg-red-500 hover:bg-red-600 w-full mt-2" >
+          <Button
+            onClick={handleLogout}
+            color="red"
+            className="bg-red-500 hover:bg-red-600 w-full mt-2"
+          >
             Logout
           </Button>
         </div>

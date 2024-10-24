@@ -7,9 +7,7 @@ const mockingEnabledPromise =
     ? import("../mocks/browser").then(async ({ worker }) => {
         await worker.start({
           onUnhandledRequest(request) {
-            if (request.url.includes("_next")) 
-              
-              {
+            if (request.url.includes("_next")) {
               return;
             }
           },
@@ -30,9 +28,5 @@ export function MSWProvider({ children }: { children: React.ReactNode }) {
 function MSWProviderWrapper({ children }: { children: React.ReactNode }) {
   use(mockingEnabledPromise);
 
-  return (
-    <MantineProvider>
-      {children}
-    </MantineProvider>
-  );
+  return <MantineProvider>{children}</MantineProvider>;
 }

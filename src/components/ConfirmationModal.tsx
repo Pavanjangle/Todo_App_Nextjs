@@ -1,16 +1,23 @@
-import React from 'react';
-import { Modal, Button } from '@mantine/core';
+import React from "react";
+import { Modal, Button } from "@mantine/core";
 
 interface ConfirmationModalProps {
   opened: boolean;
   onClose: () => void;
-  onConfirm: (actionType:string) => void;
+  onConfirm: (actionType: string) => void;
   confirmButtonTitle: string;
   actionType: string;
   message: string;
 }
- 
-const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ opened, onClose, onConfirm, confirmButtonTitle, actionType, message }) => {
+
+const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
+  opened,
+  onClose,
+  onConfirm,
+  confirmButtonTitle,
+  actionType,
+  message,
+}) => {
   return (
     <Modal opened={opened} onClose={onClose} title="Confirmation">
       <div className="p-4">
@@ -19,13 +26,12 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ opened, onClose, 
           <Button onClick={onClose} variant="outline" className="mr-2">
             Cancel
           </Button>
-          <Button onClick={()=>onConfirm(actionType)} color="red">
-           {confirmButtonTitle}
+          <Button onClick={() => onConfirm(actionType)} color="red">
+            {confirmButtonTitle}
           </Button>
         </div>
       </div>
     </Modal>
-    
   );
 };
 

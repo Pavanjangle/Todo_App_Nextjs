@@ -10,9 +10,18 @@ interface TaskProps {
   value: string;
 }
 
-const NewUpdateTask = ({ buttonTitle, onSubmitTask, value }: TaskProps): React.JSX.Element => {
+const NewUpdateTask = ({
+  buttonTitle,
+  onSubmitTask,
+  value,
+}: TaskProps): React.JSX.Element => {
   const { formObject } = useInputRegister();
-  const { register, handleSubmit, setValue, formState: { errors } } = formObject;
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = formObject;
 
   // Set the initial value for taskName when the component mounts or value changes
   React.useEffect(() => {
@@ -25,22 +34,19 @@ const NewUpdateTask = ({ buttonTitle, onSubmitTask, value }: TaskProps): React.J
       className="max-w-md mx-auto mt-20 p-6 bg-white rounded-lg shadow-lg bg-gray-300"
     >
       <CustomInput
-        label="Task Name" 
+        label="Task Name"
         placeHolder="Enter task name"
         register={register}
         name="taskName"
-        validate={(value: string) => value.length > 0 || "Task name cannot be empty"}
-        error={ errors?.taskName?.message} 
+        validate={(value: string) =>
+          value.length > 0 || "Task name cannot be empty"
+        }
+        error={errors?.taskName?.message}
       />
 
-      <SubmitButton
-        type="submit"
-        title={buttonTitle}
-      />
-     
+      <SubmitButton type="submit" title={buttonTitle} />
     </form>
   );
 };
 
 export default NewUpdateTask;
-
