@@ -1,6 +1,5 @@
 import React, { useState, SetStateAction, Dispatch, useEffect } from "react";
 import { Table, Pagination, Button, Select } from "@mantine/core";
-
 interface DataItem {
   id: number;
   taskName: string;
@@ -61,9 +60,9 @@ const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({
   return (
     <div className="p-4 bg-white shadow-md rounded-lg">
       <Table>
-        <thead className="bg-gray-300">
-          <tr>
-            <th className="text-lg font-bold text-gray-800 px-4 py-2">
+        <Table.Thead className="bg-gray-300">
+          <Table.Tr>
+            <Table.Th>
               <Button
                 variant="subtle"
                 size="xs"
@@ -73,54 +72,57 @@ const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({
                 ID{" "}
                 {sortBy === "id" ? (sortDirection === "asc" ? "↑" : "↓") : ""}
               </Button>
-            </th>
-            <th className="text-lg font-bold text-gray-800 px-4 py-2">
+            </Table.Th>
+            <Table.Th>
               <Button
                 variant="subtle"
                 size="xs"
                 onClick={() => handleSort("taskName")}
                 className="hover:underline text-gray-800"
               >
-                Task {sortBy ? (sortDirection === "asc" ? "↑" : "↓") : ""}
+                Task{" "}
+                {sortBy === "taskName"
+                  ? sortDirection === "asc"
+                    ? "↑"
+                    : "↓"
+                  : ""}
               </Button>
-            </th>
-            <th className="text-sm font-semibold text-gray-800 px-4 py-2">
+            </Table.Th>
+            <Table.Th className="text-sm font-semibold text-gray-800 px-4 py-2">
               Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item) => (
-            <tr key={item.id} className="border-b border-gray-700">
-              <td className="font-bold text-gray-800 px-4 py-2 w-[100px]">
-                {item.id}
-              </td>
-              <td className="font-medium text-gray-700 px-4 py-2 w-[300px]">
-                {item.taskName}
-              </td>
-              <td className="px-4 py-2 w-[200px] flex space-x-2">
-                <Button
-                  variant="filled"
-                  color="green"
-                  size="xs"
-                  onClick={() => handleAction(item.id, "Yes" , item.taskName)}
-                  className="w-[70px]"
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="filled"
-                  color="red"
-                  size="xs"
-                  onClick={() => handleAction(item.id, "Delete" , item.taskName)}
-                  className="w-[70px]"
-                >
-                  Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+            </Table.Th>
+          </Table.Tr>
+        </Table.Thead>
+        {data.map((item) => (
+          <Table.Tr key={item.id}>
+            <Table.Td className="font-bold text-gray-800 px-4 py-2 w-[100px]">
+              {item.id}
+            </Table.Td>
+            <Table.Td className="font-medium text-gray-700 px-4 py-2 w-[300px]">
+              {item.taskName}
+            </Table.Td>
+            <Table.Td className="px-4 py-2 w-[200px] flex space-x-2">
+              <Button
+                variant="filled"
+                color="green"
+                size="xs"
+                onClick={() => handleAction(item.id, "Yes", item.taskName)}
+                className="w-[70px]"
+              >
+                Edit
+              </Button>
+              <Button
+                variant="filled"
+                color="red"
+                size="xs"
+                onClick={() => handleAction(item.id, "Delete", item.taskName)}
+                className="w-[70px]"
+              >
+                Delete
+              </Button>
+            </Table.Td>
+          </Table.Tr>
+        ))}
       </Table>
 
       <div className="flex justify-between items-center mt-4 ">
