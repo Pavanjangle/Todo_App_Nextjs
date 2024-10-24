@@ -9,7 +9,7 @@ interface DataItem {
 
 interface PaginatedSortableTableProps {
   data: DataItem[];
-  handleAction: (id: number, action: string) => void;
+  handleAction: (id: number, action: string, taskName: string) => void;
   currentPage: number;
   setCurrentPage: Dispatch<SetStateAction<number>>;
   itemsPerPage: number;
@@ -30,7 +30,7 @@ const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [sortDirection, setSortDirection] = useState("");
   const [sortBy, setSortBy] = useState<keyof DataItem>("taskName");
 
   useEffect(() => {
@@ -103,7 +103,7 @@ const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({
                   variant="filled"
                   color="green"
                   size="xs"
-                  onClick={() => handleAction(item.id, "Yes")}
+                  onClick={() => handleAction(item.id, "Yes" , item.taskName)}
                   className="w-[70px]"
                 >
                   Edit
@@ -112,7 +112,7 @@ const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({
                   variant="filled"
                   color="red"
                   size="xs"
-                  onClick={() => handleAction(item.id, "Delete")}
+                  onClick={() => handleAction(item.id, "Delete" , item.taskName)}
                   className="w-[70px]"
                 >
                   Delete

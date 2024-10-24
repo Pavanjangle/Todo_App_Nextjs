@@ -7,6 +7,7 @@ import "@mantine/core/styles.css";
 import CustomButton from "./sharedComponent/Button";
 import { useDeleteTodo, useTodos } from "@/utils/api";
 import SearchInput from "@/components/SearchInput";
+import EditTask from "./tasks/edit/page";
 
 const Todo: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -15,7 +16,7 @@ const Todo: React.FC = () => {
     page: "1",
     limit: "5",
     property: "taskName",
-    sort: "asc",
+    sort: "",
   });
   const [action, setAction] = useState<string>("");
   const {
@@ -35,24 +36,27 @@ const Todo: React.FC = () => {
   const [taskId, setTaskId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
+  const [openEdit, setOpenEdit] = useState(false);
+  const [taskName, setTaskName] = useState("");
 
   useEffect(() => {
     sethandleFetch(true);
   }, [params]);
 
-  const handleAction = (id: number, action: string) => {
+  const handleAction = (id: number, action: string, taskName: string) => {
     setAction(action);
     setTaskId(id);
-    setOpened(true);
+    if (action === "Delete") {
+      setOpened(true);
+    } else {
+      setTaskName(taskName);
+      setOpenEdit(true);
+      sethandleFetch(false);
+    }
   };
 
   const handleAdd = () => {
     router.push("/tasks/new");
-  };
-
-  const handleEdit = () => {
-    router.push(`/tasks/${taskId}/edit`);
-    setAction("");
   };
 
   const handleConfirmDelete = () => {
@@ -100,6 +104,7 @@ const Todo: React.FC = () => {
             sortField: string,
             sortOrder: string
           ) => {
+            console.log(page, limit, sortField, sortOrder);
             const data = {
               page: page,
               limit: limit,
@@ -109,6 +114,7 @@ const Todo: React.FC = () => {
             setParams(data);
           }}
         />
+
         {/* Confirmation Modal */}
         <ConfirmationModal
           opened={opened}
@@ -123,10 +129,18 @@ const Todo: React.FC = () => {
           onConfirm={(action) => {
             if (action === "Delete") {
               handleConfirmDelete();
-            } else if (action === "Yes") {
-              handleEdit();
             }
           }}
+        />
+
+        <EditTask
+          opened={openEdit}
+          onClose={() => {
+            setOpenEdit(false);
+            sethandleFetch(true);
+          }}
+          taskName={taskName}
+          id={taskId ? taskId.toString() : ""}
         />
       </div>
     </div>

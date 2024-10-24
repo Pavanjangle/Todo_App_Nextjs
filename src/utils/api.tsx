@@ -10,7 +10,10 @@ export const useTodos = (
   handleFetch: boolean
 ) => {
   return useQuery({
-    queryKey: ["todos", page, limit, sortField, sortOrder],
+    queryKey: [
+      "todos",
+      `page=${page}&limit=${limit}&sortField=${sortField}&sortOrder=${sortOrder}`,
+    ],
     queryFn: async () => {
       const response = await fetch(
         `/api/todos/?page=${page}&limit=${limit}&sortField=${sortField}&sortOrder=${sortOrder}`

@@ -14,7 +14,7 @@ export const handlers = [
   // Intercept "GET /api/todos" requests to get the list of todos
   http.get("/api/todos", ({ request }) => {
     const searchParams = new URLSearchParams(request.url); // req.url.search is the query string part
-    const sortOrder = searchParams.get("sortOrder") || "asc";
+    const sortOrder = searchParams.get("sortOrder") || "";
     const splitData = request.url
       .split("?")[1]
       ?.split("&")
@@ -22,16 +22,18 @@ export const handlers = [
     const page = splitData ? parseInt(splitData.split("=")[1]) : 1;
     const limit = parseInt(searchParams.get("limit") || "5");
     const sortField = searchParams.get("sortField") || "id";
-    const sortedData = JSON.parse(JSON.stringify([...todos])).sort(
-      (a: { [x: string]: number }, b: { [x: string]: number }) => {
-        if (sortOrder === "asc") {
-          return a[sortField] > b[sortField] ? 1 : -1;
-        } else {
-          return a[sortField] < b[sortField] ? 1 : -1;
+    let sortedData = todos;
+    if (sortOrder) {
+      sortedData = JSON.parse(JSON.stringify([...todos])).sort(
+        (a: { [x: string]: number }, b: { [x: string]: number }) => {
+          if (sortOrder === "asc") {
+            return a[sortField] > b[sortField] ? 1 : -1;
+          } else {
+            return a[sortField] < b[sortField] ? 1 : -1;
+          }
         }
-      }
-    );
-
+      );
+    }
     // Pagination logic
     const totalPages = Math.ceil(sortedData.length / limit);
     const start = (page - 1) * limit;
