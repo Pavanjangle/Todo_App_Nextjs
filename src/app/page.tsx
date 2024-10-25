@@ -86,7 +86,6 @@ const Todo: React.FC = () => {
   // Setting up the table instance using useReactTable
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading todos</p>;
-console.log(filteredData);
   return (
     <div className="min-h-screen bg-custom-gray flex justify-center items-center">
       <div className="bg-gray-300 shadow-lg rounded-lg p-8 max-w-xl w-full">
@@ -111,7 +110,6 @@ console.log(filteredData);
             sortField: string,
             sortOrder: string
           ) => {
-            console.log(page, limit, sortField, sortOrder);
             const data = {
               page: page,
               limit: limit,
