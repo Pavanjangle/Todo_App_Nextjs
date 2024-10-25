@@ -21,9 +21,9 @@ export const handlers = [
       .find((param) => param.startsWith("page="));
     const page = splitData ? parseInt(splitData.split("=")[1]) : 1;
     const limit = parseInt(searchParams.get("limit") || "5");
-    const sortField = searchParams.get("sortField") || "id";
+    const sortField = searchParams.get("sortField") || null;
     let sortedData = todos;
-    if (sortOrder) {
+    if (sortOrder !== "reset" && sortField) {
       sortedData = JSON.parse(JSON.stringify([...todos])).sort(
         (a: { [x: string]: number }, b: { [x: string]: number }) => {
           if (sortOrder === "asc") {
