@@ -8,6 +8,7 @@ import CustomButton from "./sharedComponent/Button";
 import { useDeleteTodo, useTodos } from "@/utils/api";
 import SearchInput from "@/components/SearchInput";
 import EditTask from "./tasks/edit/page";
+import RegisterForm from "@/components/RegisterForm";
 
 const Todo: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -15,8 +16,8 @@ const Todo: React.FC = () => {
   const [params, setParams] = useState({
     page: "1",
     limit: "5",
-    property: "taskName",
-    sort: "",
+    property: "",
+    sort: "reset",
   });
   const [action, setAction] = useState<string>("");
   const {
@@ -34,10 +35,12 @@ const Todo: React.FC = () => {
   const router = useRouter();
   const [opened, setOpened] = useState(false);
   const [taskId, setTaskId] = useState<number | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
   const [openEdit, setOpenEdit] = useState(false);
   const [taskName, setTaskName] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const [sortDirection, setSortDirection] = useState("reset");
 
   useEffect(() => {
     sethandleFetch(true);
@@ -54,6 +57,15 @@ const Todo: React.FC = () => {
       sethandleFetch(false);
     }
   };
+
+  useEffect(() => {
+    const updateQueryParams = () => {
+      const fullUrl = `/?page=${currentPage}&limit=${pageSize}&sortField=${"taskName"}&sortOrder=${sortDirection}`;
+      router.push(fullUrl);
+    };
+
+    updateQueryParams();
+  }, [currentPage, sortDirection, pageSize]);
 
   const handleAdd = () => {
     router.push("/tasks/new");
@@ -83,12 +95,11 @@ const Todo: React.FC = () => {
   // Setting up the table instance using useReactTable
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading todos</p>;
-
   return (
     <div className="min-h-screen bg-custom-gray flex justify-center items-center">
       <div className="bg-gray-300 shadow-lg rounded-lg p-8 max-w-xl w-full">
         <h1 className="text-2xl font-bold mb-5 text-center">TODO App</h1>
-
+<RegisterForm/>
         <SearchInput value={searchTerm} onChange={handleSearch} />
         <CustomButton title="Add New TODO" onClick={handleAdd} />
         <PaginatedSortableTable
@@ -98,13 +109,16 @@ const Todo: React.FC = () => {
           itemsPerPage={itemsPerPage}
           totalPages={todos?.totalPages}
           handleAction={handleAction}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
+          sortDirection={sortDirection}
+          setSortDirection={setSortDirection}
           handleSorting={(
             page: string,
             limit: string,
             sortField: string,
             sortOrder: string
           ) => {
-            console.log(page, limit, sortField, sortOrder);
             const data = {
               page: page,
               limit: limit,

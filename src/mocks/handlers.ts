@@ -11,9 +11,8 @@ const generateId = () =>
   todos.length ? Math.max(...todos.map((todo) => todo.id)) + 1 : 1;
 
 export const handlers = [
-  // Intercept "GET /api/todos" requests to get the list of todos
   http.get("/api/todos", ({ request }) => {
-    const searchParams = new URLSearchParams(request.url); // req.url.search is the query string part
+    const searchParams = new URLSearchParams(request.url); 
     const sortOrder = searchParams.get("sortOrder") || "";
     const splitData = request.url
       .split("?")[1]
@@ -21,9 +20,9 @@ export const handlers = [
       .find((param) => param.startsWith("page="));
     const page = splitData ? parseInt(splitData.split("=")[1]) : 1;
     const limit = parseInt(searchParams.get("limit") || "5");
-    const sortField = searchParams.get("sortField") || "id";
+    const sortField = searchParams.get("sortField") || null;
     let sortedData = todos;
-    if (sortOrder) {
+    if (sortOrder !== "reset" && sortField) {
       sortedData = JSON.parse(JSON.stringify([...todos])).sort(
         (a: { [x: string]: number }, b: { [x: string]: number }) => {
           if (sortOrder === "asc") {
