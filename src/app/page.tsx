@@ -41,7 +41,6 @@ const Todo: React.FC = () => {
   const [pageSize, setPageSize] = useState(5);
   const [sortDirection, setSortDirection] = useState("reset");
 
-
   useEffect(() => {
     sethandleFetch(true);
   }, [params]);
@@ -57,6 +56,15 @@ const Todo: React.FC = () => {
       sethandleFetch(false);
     }
   };
+
+  useEffect(() => {
+    const updateQueryParams = () => {
+      const fullUrl = `http://localhost:3000/?page=${currentPage}&limit=${pageSize}&sortField=${"taskName"}&sortOrder=${sortDirection}`;
+      router.push(fullUrl);
+    };
+
+    updateQueryParams();
+  }, [currentPage, sortDirection, pageSize]);
 
   const handleAdd = () => {
     router.push("/tasks/new");
