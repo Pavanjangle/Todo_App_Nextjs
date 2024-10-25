@@ -59,7 +59,7 @@ const Todo: React.FC = () => {
 
   useEffect(() => {
     const updateQueryParams = () => {
-      const fullUrl = `http://localhost:3000/?page=${currentPage}&limit=${pageSize}&sortField=${"taskName"}&sortOrder=${sortDirection}`;
+      const fullUrl = `/?page=${currentPage}&limit=${pageSize}&sortField=${"taskName"}&sortOrder=${sortDirection}`;
       router.push(fullUrl);
     };
 
