@@ -1,5 +1,6 @@
 import React, {SetStateAction, Dispatch, useEffect } from "react";
 import { Table, Pagination, Button, Select } from "@mantine/core";
+
 interface DataItem {
   id: number;
   taskName: string;
@@ -49,7 +50,6 @@ const PaginatedSortableTable: React.FC<PaginatedSortableTableProps> = ({
 
   // Handle sorting
   const handleSort = (key: keyof DataItem) => {
-    console.log(sortDirection);
     setSortDirection(
       sortDirection === "reset" ? "asc" : sortDirection === "asc" ? "desc" : "reset"
     );
