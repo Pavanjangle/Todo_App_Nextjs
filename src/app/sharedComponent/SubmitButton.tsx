@@ -1,7 +1,7 @@
 import React from "react";
 import { Button as MantineButton } from "@mantine/core";
 
-interface SubmitButtonProps {
+export interface SubmitButtonProps {
   title: string;
   type: "button" | "submit" | "reset";
 }

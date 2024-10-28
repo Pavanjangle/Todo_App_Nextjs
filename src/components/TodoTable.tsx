@@ -7,7 +7,7 @@ interface DataItem {
   data: unknown[];
 }
 
-interface PaginatedSortableTableProps {
+export interface PaginatedSortableTableProps {
   data: DataItem[];
   handleAction: (id: number, action: string, taskName: string) => void;
   currentPage: number;

@@ -9,6 +9,8 @@ import { useDeleteTodo, useTodos } from "@/utils/api";
 import SearchInput from "@/components/SearchInput";
 import EditTask from "./tasks/edit/page";
 import RegisterForm from "@/components/RegisterForm";
+import "./globals.css";
+
 
 const Todo: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");

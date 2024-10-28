@@ -4,8 +4,8 @@ import React from "react";
 import { InputHTMLAttributes } from "react";
 import { UseFormRegister } from "react-hook-form";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  placeHolder: string;
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  placeHolder?: string;
   label?: string;
   error?: string;
   name: "taskName";

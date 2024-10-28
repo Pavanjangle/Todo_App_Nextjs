@@ -1,7 +1,7 @@
 import React from "react";
 import { Button as MantineButton } from "@mantine/core";
 
-interface ButtonProps {
+export interface ButtonProps {
   title: string;
   onClick: () => void;
 }
