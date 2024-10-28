@@ -3,6 +3,9 @@ import localFont from "next/font/local";
 import { MSWProvider } from "./msw-provider";
 import "./globals.css";
 import '@mantine/core/styles.css';
+import customTheme from '../theme';
+import { MantineProvider } from "@mantine/core";
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,9 +32,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* Wrap MantineProvider around MSWProvider */}
-          {/* Enable client-side mocking */}
-          <MSWProvider>{children}</MSWProvider>
+      <MantineProvider theme={customTheme}>
+      <MSWProvider>{children}</MSWProvider>
+      </MantineProvider>
+
       </body>
     </html>
   );
