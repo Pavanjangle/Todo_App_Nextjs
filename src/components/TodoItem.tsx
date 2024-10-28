@@ -15,14 +15,14 @@ const TodoItem: React.FC<TodoItemProps> = ({ taskName, onEdit, onDelete }) => {
       <div>
         <Button 
           onClick={onEdit} 
-          className="mr-2" // Using Mantine's className prop for margin
-          color="green" // Mantine color prop for styling
+          className="mr-2" 
+          color="green" 
         >
           Edit
         </Button>
         <Button 
           onClick={onDelete} 
-          color="red" // Mantine color prop for styling
+          color="red" 
         >
           Delete
         </Button>
