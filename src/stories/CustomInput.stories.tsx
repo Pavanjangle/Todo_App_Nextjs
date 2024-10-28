@@ -1,7 +1,6 @@
 import React from "react";
 import { Meta, StoryFn } from "@storybook/react";
 import CustomInput, { InputProps } from "../app/sharedComponent/CustomInput";
-import { MantineProvider } from "@mantine/core";
 import { UseFormRegister } from "react-hook-form";
 
 export default {
@@ -15,9 +14,7 @@ export default {
 } as Meta;
 
 const Template: StoryFn<InputProps> = (args) => (
-  <MantineProvider>
     <CustomInput {...args} />
-  </MantineProvider>
 );
 
 export const Default = Template.bind({});

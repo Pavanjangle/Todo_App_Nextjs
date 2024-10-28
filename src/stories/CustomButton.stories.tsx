@@ -1,7 +1,6 @@
 import React from "react";
 import { Meta, StoryFn } from "@storybook/react";
 import CustomButton, { ButtonProps } from "../app/sharedComponent/Button";
-import { MantineProvider } from "@mantine/core";
 
 export default {
   title: "sharedComponent/CustomButton",
@@ -13,9 +12,7 @@ export default {
 } as Meta;
 
 const Template: StoryFn<ButtonProps> = (args) => (
-  <MantineProvider>
     <CustomButton {...args} />
-  </MantineProvider>
 );
 
 export const Default = Template.bind({});

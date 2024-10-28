@@ -23,7 +23,6 @@ const NewUpdateTask = ({
     formState: { errors },
   } = formObject;
 
-  // Set the initial value for taskName when the component mounts or value changes
   React.useEffect(() => {
     setValue("taskName", value);
   }, [value, setValue]);

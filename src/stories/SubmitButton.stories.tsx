@@ -1,7 +1,6 @@
 import React from "react";
 import { Meta, StoryFn } from "@storybook/react";
 import SubmitButton from "../app/sharedComponent/SubmitButton"; 
-import { MantineProvider } from "@mantine/core";
 
 export default {
   title: "sharedComponent/SubmitButton",
@@ -16,9 +15,7 @@ export default {
 } as Meta;
 
 const Template: StoryFn<{ title: string; type: "button" | "submit" | "reset" }> = (args) => (
-  <MantineProvider>
     <SubmitButton {...args} />
-  </MantineProvider>
 );
 
 export const Default = Template.bind({});
