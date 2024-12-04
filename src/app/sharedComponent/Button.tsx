@@ -1,0 +1,17 @@
+import React from "react";
+import { Button as MantineButton } from '@mantine/core';
+
+interface ButtonProps {
+  title: string;
+  onClick: () => void;
+}
+
+const CustomButton = ({ title, onClick }: ButtonProps): React.JSX.Element => {
+  return <MantineButton
+    onClick={onClick}
+    className="mt-4"  
+    >
+    {title}</MantineButton>;
+};
+
+export default CustomButton;
