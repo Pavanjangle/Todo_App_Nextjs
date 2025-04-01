@@ -7,11 +7,12 @@ const mockingEnabledPromise =
   typeof window !== "undefined"
     ? import("../mocks/browser").then(async ({ worker }) => {
         await worker.start({
-          onUnhandledRequest(request, print) {
-            if (request.url.includes("_next")) {
+          onUnhandledRequest(request) {
+            if (request.url.includes("_next")) 
+              
+              {
               return;
             }
-            print.warning();
           },
         });
       })
